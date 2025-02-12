@@ -13,9 +13,7 @@ class PMS {
 
   startServer() {
     this.pms.set('view engine', 'ejs');
-    this.pms.use(express.static(path.join(__dirname, 'public', 'images')));
-    this.pms.use(express.static(path.join(__dirname, 'public', 'javascript')));
-    this.pms.use(express.static(path.join(__dirname, 'public', 'stylesheets')));
+    this.pms.use(express.static(path.join(__dirname, 'public')));
 
     this.pms.get('/', (req, res) => {
       const indexContent = {
