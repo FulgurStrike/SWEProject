@@ -11,5 +11,5 @@
 ```bash
 npm run dev <- This will run nodemon script so you can see changes
 
-npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css --watch <- Auto compiles css changes so you can see them update in real time
+npm run compileCss <- Compiles css with a watcher flag to see real time changes
 ```
