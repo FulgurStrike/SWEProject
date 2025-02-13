@@ -29,10 +29,7 @@ class PMS {
       console.log(`Now listening on port ${this.PORT}`);
       console.log(`http::/localhost:${this.PORT}`);
     });
-  }
-
-
-  
+  }  
 }
 
 let pms = new PMS();
