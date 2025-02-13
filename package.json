@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node pms.js",
     "dev": "nodemon pms.js"
+    "compileCss": "npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css --watch"
   },
   "keywords": [],
   "author": "",
