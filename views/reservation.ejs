@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation</title>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="text-xl"><%= siteName || 'placeholder' %></div>
+      <ul class="flex space-x-6">
+        <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
+        <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
+        <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
+        <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
+        <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
+        <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Reservation form -->
+  <div class="max-w-7x1 mx-auto grid grid-cols-2 gap-8 p-8">
+    <div class="bg-white p-6 rounded-lg shadow-lg"></div>
+        <h2 class="text-2xl font-semibold mb-6 text-center">Reserve Your Parking Spot</h2>
+        <form action="#" method="POST">
+            
+            <div class="mb-4">
+                <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                <input type="text" id="location" name="location" class="w-full p-3 border border-gray-300 rounded-md" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="from" class="block text-sm font-medium text-gray-700">From</label>
+                <input type="datetime-local" id="from" name="from" class="w-full p-3 border border-gray-300 rounded-md" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="to" class="block text-sm font-medium text-gray-700">To</label>
+                <input type="datetime-local" id="to" name="to" class="w-full p-3 border border-gray-300 rounded-md" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="registration" class="block text-sm font-medium text-gray-700">Enter Registration Plate No.</label>
+                <input type="text" id="registration" name="registration" class="w-full p-3 border border-gray-300 rounded-md" required>
+            </div>
+            
+            <div class="flex justify-center">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">Reserve Spot</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Map -->
+    <div class="bg-white p-6 rounded-lg shadow-lg flex justify-center items-center">
+        <img src="https://via.placeholder.com/600x400" alt="Map" class="w-full h-auto rounded-lg shadow-md">
+    </div>
+  </div>
+
+ 
+  
+  <!-- Footer -->
+   <footer class="bg-blue-600 text-white py-6">
+    <div class="max-w-7xl mx-auto text-center">
+        <p>&copy; <%= footerText %></p>
+    </div>
+   </footer>
+</body>
+</html>

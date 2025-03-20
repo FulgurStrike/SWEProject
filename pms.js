@@ -1,76 +1,73 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const fileSystem = require('fs');
-const { title } = require('process');
+//const fileSystem = require('fs');
+//const { title } = require('process');
+const cookieSession = require('cookie-session');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
+const indexRoutes = require('./routes/indexRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
+const signupRoutes = require('./routes/signupRoutes');
+
+const connectDB = require('./config/database');
+dotenv.config(); // Load environment variables from .env
 
 class PMS {
   constructor() {
     this.jsonParser = bodyParser.json;
     this.PORT = 3000;
     this.pms = express();
+    this.mongoURI = process.env.MONGO_URL; // Get Mongo URI from .env
   }
 
-  startServer() {
+  async startServer() {
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
+    this.pms.use(bodyParser.urlencoded({extended: true}));
 
-    this.pms.get('/', (req, res) => {
-      const indexContent = {
-        title: "ParkName",
-        siteName: "ParkName",
-        home: "Home",
-        about: "About",
-        services: "Services",
-        contact: "Contact",
-        login: "Login",
-        signUp: "Sign Up",
-        heroHeader: "Welcome to our Website",
+    // Store the session
+    this.pms.use(cookieSession({
+      name: 'session',
+      keys: [''], // Use a secret key for signing in the session cookies
+      maxAge: 24 * 60 * 60 * 1000 // Session expiry time 1 day
+    }));
 
-        footerText: "2025 Simple starter Website"
-      }
-
-      res.render('index', indexContent)
-
+    // Passes the login status to the views
+    this.pms.use((req, res, next) => {
+      res.locals.isLoggedIn = req.session.user ? true : false; // Add isLoggedIn variable to the view
+      next();
     });
 
-    this.pms.get('/signup', (req, res) => {
-      const signupContent = {
-        title: "ParkName",
-        siteName: "ParkName",
-        home: "Home",
-        about: "About",
-        services: "Services",
-        contact: "Contact",
-        login: "Login",
-        signUp: "Sign Up",
-        footerText: "2025 Simple starter website"
-      }
-      
-      res.render('signup', signupContent)
-    });
+    // MongoDB connection
+    await connectDB();
+    
+    // Routes
+    this.pms.use(indexRoutes);
+    this.pms.use(loginRoutes);
+    this.pms.use(reservationRoutes);
+    this.pms.use(signupRoutes);
 
-    this.pms.get('/login', (req, res) => {
-      const loginContent = {
-        title: "ParkName",
-        siteName: "ParkName",
-        home: "Home",
-        about: "About",
-        services: "Services",
-        contact: "Contact",
-        login: "Login",
-        signUp: "Sign Up",
-        footerText: "2025 Simple starter website"
-      }
+    // MongoDB connection
+    mongoose.connect(this.mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("Connected to MongoDB");
 
-      res.render('login', loginContent)
-    });
+    })
+    .catch((err) => {
+      console.log("Error connecting to MongoDB", err);
+    })
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);
       console.log(`http::/localhost:${this.PORT}`);
     });
+
   }  
 }
 
