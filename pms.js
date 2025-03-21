@@ -1,35 +1,61 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const fileSystem = require('fs');
+//const fileSystem = require('fs');
+//const { title } = require('process');
+const cookieSession = require('cookie-session');
+const dotenv = require('dotenv');
 
+const indexRoutes = require('./routes/indexRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
+const signupRoutes = require('./routes/signupRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+
+const connectDB = require('./config/database');
+dotenv.config(); // Load environment variables from .env
 
 class PMS {
   constructor() {
     this.jsonParser = bodyParser.json;
-    this.PORT = 3000;
+    this.PORT = process.env.PORT || 3000;
     this.pms = express();
   }
 
-  startServer() {
+  async startServer() {
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
+    this.pms.use(bodyParser.urlencoded({extended: true}));
 
-    this.pms.get('/', (req, res) => {
-      const indexContent = {
-        "title": "Test Title",
-        "headerOne": "Test Header"
-      }
+    // Store the session
+    this.pms.use(cookieSession({
+      name: 'session',
+      keys: [process.env.SESSION_SECRET ||'default_secret_key'], // Use a secret key for signing in the session cookies
+      maxAge: 24 * 60 * 60 * 1000 // Session expiry time 1 day
+    }));
 
-      res.render('index', indexContent)
-
+    // Passes the login status to the views
+    this.pms.use((req, res, next) => {
+      res.locals.isLoggedIn = req.session.user ? true : false; // Add isLoggedIn variable to the view
+      next();
     });
+
+    // MongoDB connection
+    await connectDB();
+    
+    // Routes
+    this.pms.use(indexRoutes);
+    this.pms.use(loginRoutes);
+    this.pms.use(reservationRoutes);
+    this.pms.use(signupRoutes);
+    this.pms.use(paymentRoutes);
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);
       console.log(`http::/localhost:${this.PORT}`);
     });
-  }  
+
+  }   
 }
 
 let pms = new PMS();

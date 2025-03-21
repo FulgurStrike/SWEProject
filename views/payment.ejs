@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/output.css">
+    <title>Payment</title>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+          <div class="text-xl">Parking System</div>
+          <ul class="flex space-x-6">
+            <li><a href="/" class="hover:text-gray-300">Home</a></li>
+            <li><a href="/about" class="hover:text-gray-300">About</a></li>
+            <li><a href="/services" class="hover:text-gray-300">Services</a></li>
+            <li><a href="/contact" class="hover:text-gray-300">Contact</a></li>
+            <li><a href="/login" class="hover:text-gray-300">Login</a></li>
+          </ul>
+        </div>
+    </nav>
+
+    <!-- Checkout Panel -->
+    <div class="checkout-panel w-[940px] h-[766px] bg-white shadow-lg rounded-xl mx-auto mt-10">
+        <div class="panel-body p-8 flex flex-col justify-between h-full">
+
+            <!-- Title -->
+            <h2 class="title text-2xl font-bold mb-8 text-center text-gray-800">Checkout</h2>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar flex justify-between items-center mb-8 relative">
+                <div class="step w-8 h-8 border-4 border-gray-300 rounded-full bg-red-500 flex items-center justify-center relative z-10">
+                    <span class="text-sm text-gray-700">1</span>
+                </div>
+
+                <div class="line flex-1 h-[6px] bg-gray-300 relative z-0"></div>
+
+                <div class="step w-8 h-8 border-4 border-gray-300 rounded-full bg-red-500 flex items-center justify-center relative z-10">
+                    <span class="text-sm text-gray-700">2</span>
+                </div>
+
+                <div class="line flex-1 h-[6px] bg-gray-300 relative z-0"></div>
+
+                <div class="step w-8 h-8 border-4 border-gray-300 rounded-full bg-gray-300 flex items-center justify-center relative z-10">
+                    <span class="text-sm text-gray-700">3</span>
+                </div>
+
+                <div class="line flex-1 h-[6px] bg-gray-300 relative z-0"></div>
+
+                <div class="step w-8 h-8 border-4 border-gray-300 rounded-full bg-gray-300 flex items-center justify-center relative z-10 ">
+                    <span class="text-sm text-gray-700">4</span>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-method flex justify-between mb-12">
+
+                <!-- Credit Card Payment Option -->
+                <label for="card" class="method flex flex-col items-center p-4 bg-gray-100 border rounded-md w-[382px] h-[122px] cursor-pointer">
+                    <div class="card-logos flex justify-between w-[150px]">
+                        <img src="/images/visa_logo.png" alt="Visa Logo">
+                        <img src="/images/mastercard_logo.png" alt="MasterCard Logo">
+                    </div>
+                    <div class="radio-input mt-4">
+                        <input id="card" type="radio" name="payment" class="mr-2">
+                        <span>Pay £___ with Credit Card</span>
+                    </div>
+                </label> 
+
+                <!-- PayPal Payment Option -->
+                <label for="paypal" class="method flex flex-col items-center p-4 bg-gray-100 border rounded-md w-[382px] h-[122px] cursor-pointer">
+                    <img src="/images/paypal_logo.png" alt="PayPal Logo">
+                    <div class="radio-input mt-4">
+                        <input id="paypal" type="radio" name="payment" class="mr-2">
+                        <span>Pay £___ with PayPal</span>
+                    </div>
+                </label>
+
+            </div> 
+
+            <!-- Payment Details -->
+            <div class="input-fields grid grid-cols-2 gap-6">
+                <!-- Cardholder Details -->
+                <div class="column-1">
+                    <label for="cardholder" class="block text-sm font-medium text-gray-700">Cardholder's Name</label>
+                    <input type="text" id="cardholder" class="w-full p-3 border border-gray-300 rounded-md" required>
+
+                    <div class="small-inputs grid grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700">Valid Thru</label>
+                            <input type="text" id="date" placeholder="MM / YY" class="w-full p-3 border border-gray-300 rounded-md">
+                        </div>
+
+                        <div>
+                            <label for="verification" class="block text-sm font-medium text-gray-700">CVV / CVC *</label>
+                            <input type="password" id="verification" class="w-full p-3 border border-gray-300 rounded-md" required>
+                        </div>
+                    </div>
+                </div> 
+
+                <!-- Card Number -->
+                <div class="column-2">
+                    <label for="cardnumber" class="block text-sm font-medium text-gray-700">Card Number</label>
+                    <input type="password" id="cardnumber" class="w-full p-3 border border-gray-300 rounded-md" required>
+                    <span class="text-sm text-gray-500 mt-2 block">* CVV or CVC is the card security code, a unique three-digit number on the back of your card separate from its number.</span>
+                </div>
+
+             </div> 
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer flex justify-between p-4 bg-gray-100 rounded-b-xl">
+            <button class="btn back-btn bg-gray-300 text-gray-800 px-6 py-3 rounded-md">Back</button>
+            <button class="btn next-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">Next Step</button>
+        </div>
+
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; Parking System</p>
+        </div>
+    </footer>
+        
+
+</body>
+</html>
