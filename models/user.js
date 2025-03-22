@@ -2,9 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username: String,
-    password: String,
-    contactinfo: String
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    contactinfo: {
+        phone: { type: String },
+        email: { type: String},
+        address: { type: String},
+    },
+    role: {type: String, enum: ['driver', 'admin'], required: true}
 });
 
 userSchema.methods.getUsername = function() {
