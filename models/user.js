@@ -22,7 +22,7 @@ userSchema.methods.getContactInfo = function() {
 
 userSchema.methods.updateContactInfo = function(newContactInfo) {
     this.contactinfo = newContactInfo;
-    return this.contactinfo;
+    return this.save();
 }
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,10 +1,14 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-//const fileSystem = require('fs');
-//const { title } = require('process');
 const cookieSession = require('cookie-session');
 const dotenv = require('dotenv');
+
+const ParkingController = require('./controllers/ParkingController');
+const ParkingRequestController = require('./controllers/ParkingRequestController');
+const PaymentController = require('./controllers/PaymentController');
+const AdminController = require('./controllers/adminController');
+
 
 const indexRoutes = require('./routes/indexRoutes');
 const loginRoutes = require('./routes/loginRoutes');
@@ -49,6 +53,12 @@ class PMS {
     this.pms.use(reservationRoutes);
     this.pms.use(signupRoutes);
     this.pms.use(paymentRoutes);
+
+    // Controllers
+    this.pms.use(ParkingController);
+    this.pms.use(ParkingRequestController);
+    this.pms.use(PaymentController);
+    this.pms.use(AdminController);
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);

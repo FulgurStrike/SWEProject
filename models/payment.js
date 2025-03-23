@@ -8,8 +8,9 @@ const paymentSchema = new Schema({
     paymentStatus: {type: String, enum: ['pending', 'completed', 'failed'], required: true}
 });
 
-paymentSchema.methods.updateStatus = function(status) {
+paymentSchema.methods.updateStatus = async function(status) {
     this.paymentStatus = status;
+    await this.save();
     return this.paymentStatus;
 };
 

@@ -10,8 +10,9 @@ const parkingRequestSchema = new Schema({
     requeststatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }
 });
 
-parkingRequestSchema.methods.updateRequestStatus = function (status) {
+parkingRequestSchema.methods.updateRequestStatus = async function (status) {
     this.requeststatus = status;
+    await this.save();
     return this.requeststatus;
 };
 
