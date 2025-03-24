@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { createHash } = require('crypto');
-const User = require('../model/user');
+const User = require('../models/driveruser');
 
 
 router.get('/signup', (req, res) => {
@@ -15,7 +15,7 @@ router.get('/signup', (req, res) => {
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 Simple starter website",
-      user: new User(),
+      user: new DriverUser(),
     }
       res.render('signup', signupContent)
   });
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
 
   try {
     const newUser = await user.save()
-    res.redirect(`/signup`);
+    res.redirect(`/login`);
   } catch {
     res.render('/signup', {
       user: user,

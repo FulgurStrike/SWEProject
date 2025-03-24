@@ -3,12 +3,16 @@ const User = require('./user.js');
 const mongoose = require('mongoose');
 
 const driverUserSchema = new mongoose.Schema({
-    driverID: String
+  firstName: String,
+  lastName: String,
+  reg: String,
 });
 
 driverUserSchema.methods.getDriverID = function() {
     return this.driverID;
 }
 
-module.exports = User.discriminator('DriverUser', driverUserSchema);
+DriverUser = User.discriminator('DiverUser', driverUserSchema);
+
+module.exports = DriverUser
 
