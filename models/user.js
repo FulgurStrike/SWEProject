@@ -21,5 +21,4 @@ userSchema.methods.updateContactInfo = function(newContactInfo) {
     this.contactinfo = newContactInfo;
     return this.contactinfo;
 }
-
 module.exports = mongoose.model('User', userSchema);
