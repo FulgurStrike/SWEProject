@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username: String,
-    password: String,
-    contactinfo: String
+  firstName: String,
+  lastName: String,
+  email: String,
+  reg: String,
+  password: String,
 });
 
 userSchema.methods.getUsername = function() {
