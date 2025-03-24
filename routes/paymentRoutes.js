@@ -1,20 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const paymentController = require('../controllers/PaymentController');
 
-router.get('/payment', (req, res) => {
-    const paymentContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      footerText: "2025 Simple starter website"
-    }
-
-    res.render('payment', paymentContent)
-});
+router.get('/payment', paymentController.renderPaymentPage);
+router.post('/payment/make', paymentController.makePayment);
+router.post('/payment/process', paymentController.processPayment);
 
 module.exports = router;

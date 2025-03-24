@@ -1,10 +1,12 @@
-const express = require('express');
-const router = express.Router();
 const Payment = require('../models/payment');
 
 // Make payment
-router.post('/make', async (req, res) => {
+exports.makePayment = async (req, res) => {
     const { driverID, amount, paymentMethod } = req.body;
+
+    if (!driverID || !amount || !paymentMethod) {
+        return res.status(400).send('Missing required payment information');
+    }
 
     try {
         const payment = new Payment({
@@ -18,13 +20,18 @@ router.post('/make', async (req, res) => {
 
         return res.status(201).json(payment);
     } catch (err) {
+        console.error(err);
         return res.status(500).send(err.message);
     }
-});
+};
 
 // Process payment
-router.post('/process', async (req, res) => {
+exports.processPayment = async (req, res) => {
     const { paymentID } = req.body;
+
+    if (!paymentID) {
+        return res.status(400).send('Payment ID is required');
+    }
 
     try {
         const payment = await Payment.findById(paymentID);
@@ -38,8 +45,22 @@ router.post('/process', async (req, res) => {
 
         return res.status(200).send('Payment processed');
     } catch (err) {
+        console.error(err);
         return res.status(500).send(err.message);
     }
-});
+};
 
-module.exports = router;
+exports.renderPaymentPage = (req, res) => {
+    const paymentContent = {
+      title: "ParkName",
+      siteName: "ParkName",
+      home: "Home",
+      about: "About",
+      services: "Services",
+      contact: "Contact",
+      login: "Login",
+      signUp: "Sign Up",
+      footerText: "2025 Simple starter website"
+    };
+    res.render('payment', paymentContent)
+};

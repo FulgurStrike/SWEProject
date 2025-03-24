@@ -12,17 +12,14 @@ const userSchema = new Schema({
     role: {type: String, enum: ['driver', 'admin'], required: true}
 });
 
-userSchema.methods.getUsername = function() {
-    return this.username;
-}
-
-userSchema.methods.getContactInfo = function() {
-    return this.contactinfo;
-}
-
-userSchema.methods.updateContactInfo = function(newContactInfo) {
+userSchema.methods.updateContactInfo = async function(newContactInfo) {
+    if (!newContactInfo.phone && !newContactInfo.email && !newContactInfo.address) {
+        throw new Error('At least one contact field is needed');
+        
+    }
     this.contactinfo = newContactInfo;
-    return this.save();
+    await this.save();
+    return this.contactinfo;
 }
 
 module.exports = mongoose.model('User', userSchema);

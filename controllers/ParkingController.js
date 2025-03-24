@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 const ParkingLot = require('../models/parkinglot');
 const ParkingSpace = require('../models/parkingspace');
 const ParkingRequest = require('../models/parkingrequest');
@@ -8,11 +8,16 @@ router.post('/assign', async (req, res) => {
     const { requestID, spaceID } = req.body;
 
     try {
-        const parkingRequest = await ParkingRequest.findByID(requestID).populate('driver');
-        const parkingSpace = await ParkingSpace.findByID(spaceID);
+        const parkingRequest = await ParkingRequest.findById(requestID).populate('driver');
+        const parkingSpace = await ParkingSpace.findById(spaceID);
 
         if (!parkingRequest || !parkingSpace) {
             return res.status(404).send('Parking request or space not found');
+        }
+
+        // Check if parking space is available
+        if (parkingSpace.isOccupied || parkingSpace.isReserved) {
+            return res.status(400).send('Parking space is already occupied or reserved');
         }
 
         // Assign parking space to the request
@@ -33,9 +38,13 @@ router.post('/release', async (req, res) => {
     const {spaceID} = req.body;
 
     try {
-        const parkingSpace = await ParkingSpace.findByID(spaceID);
+        const parkingSpace = await ParkingSpace.findById(spaceID);
         if (!parkingSpace) {
             return res.status(404).send("Parking space not found");
+        }
+
+        if (!parkingSpace.isOccupied) {
+            return res.status(400).send('Parking space is not occupied')
         }
 
         // Release parking space
@@ -51,10 +60,15 @@ router.post('/update', async (req, res) => {
     const { spaceID, status } = req.body;
     
     try {
-        const parkingSpace = await ParkingSpace.findByID(spaceID);
+        const parkingSpace = await ParkingSpace.findById(spaceID);
 
         if (!parkingSpace) {
             return res.status(404).send('Parking space not found');
+        }
+
+        // Validate status value
+        if (status !== 'occupied' && status !== 'available') {
+            return res.status(400).send('Invalid status');
         }
 
         // Update parking space status
@@ -70,11 +84,15 @@ router.post('/add', async (req, res) => {
     const { parkingLotID, spaceID } = req.body;
 
     try {
-        const parkingLot = await ParkingLot.findByID(parkingLotID);
-        const parkingSpace = await ParkingSpace.findByID(spaceID);
+        const parkingLot = await ParkingLot.findById(parkingLotID);
+        const parkingSpace = await ParkingSpace.findById(spaceID);
 
         if (!parkingLot || !parkingSpace) {
             return res.status(404).send('Parking lot or space not found');
+        }
+
+        if (parkingLot.parkingSpaces.includes(parkingSpace._id)) {
+            return res.status(400).send('Parking space already added to lot');
         }
 
         parkingLot.parkingSpaces.push(parkingSpace._id);
@@ -89,13 +107,14 @@ router.post('/remove', async (req, res) => {
     const { parkingLotID, spaceID } = req.body;
 
     try {
-        const parkingLot = await ParkingLot.findByID(parkingLotID);
+        const parkingLot = await ParkingLot.findById(parkingLotID);
         if (!parkingLot) {
             return res.status(404).send('Parking lot not found');
         }
 
         // Remove parking space from the lot
-        parkingLot.parkingSpaces.filter(spaceID => spaceID.toString() !== spaceID);
+        parkingLot.parkingSpaces = parkingLot.parkingSpaces.filter(spaceID => spaceID.toString() !== spaceID);
+       
         await parkingLot.save();
         return res.status(200).send('Parking space removed from lot');
     } catch (err) {
