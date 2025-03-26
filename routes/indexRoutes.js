@@ -1,21 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const ParkingRequestController = require('../controllers/ParkingRequestController');
 
-router.get('/', (req, res) => {
-    const indexContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      heroHeader: "Welcome to our Website",
+router.get('/', ParkingRequestController.showReservationPage);
+router.post('/reservation', ParkingRequestController.makeReservation);
+router.get('/requests', ParkingRequestController.viewUserParkingRequests);
+router.get('/request/:requestID', ParkingRequestController.viewParkingRequest);
 
-      footerText: "2025 Simple starter Website"
-    }
-    res.render('index', indexContent)
-  });
-
-  module.exports = router;
+module.exports = router;

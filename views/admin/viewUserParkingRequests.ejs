@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Requests for User <%= userID %></title>
+</head>
+<body>
+    <h1>Parking Requests for User <%= userID %></h1>
+
+    <% if (parkingRequests.length > 0) { %>
+        <ul>
+            <% parkingRequests.forEach(function(request) { %>
+                <li>
+                    <p>Request ID: <%= request._id %></p>
+                    <p>Status: <%= request.requestStatus %></p>
+                    <p>Arrival Time: <%= request.arrivalTime %></p>
+                    <p>Departure Time: <%= request.departureTime %></p>
+                    <p>Parking Space: <%= request.parkingSpace ? request.parkingSpace.spaceID : 'Not assigned' %></p>
+                    <form action="/admin/approve" method="POST">
+                        <input type="hidden" name="parkingRequestID" value="<%= request._id %>">
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="/admin/reject" method="POST">
+                        <input type="hidden" name="parkingRequestID" value="<%= request._id %>">
+                        <button type="submit">Reject</button>
+                    </form>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No parking requests found for this user.</p>
+    <% } %>
+
+    <a href="/admin/dashboard">Back to Admin Dashboard</a>
+</body>
+</html>

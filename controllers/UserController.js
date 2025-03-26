@@ -1,74 +1,26 @@
-const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-
-// Input validation
-const validatePassword = (password) => {
-    const minLength = 8;
-    const hasNumbers = /\d/;
-    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/;
-    return password.length >= minLength && hasNumbers.test(password) && hasSpecialChars.test(password);
-} 
-
-// Register Account
-exports.registerUser = async (req, res) => {
-    const { username, password, contactInfo } = req.body;
-    
-    // Validate the password format
-    if (!validatePassword(password)) {
-        return res.status(400).send('Password does not meet the requirements.');
-    }
-
+exports.showUserProfile() = async (req, res) => {
+    const { userID } = req.user; // Assuming JWT middleware populates req.user
     try {
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            res.status(400).send('Username already exists');
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = new User({
-            username,
-            password: hashedPassword,
-            contactinfo: contactInfo,
-            role: 'driver'
-        });
-
-        await user.save();
-
-        return res.status(201).send('User registered successfully');
+        const user = await User.findById(userID);
+        return res.status(200).json(user);
     } catch (err) {
-        console.error(err);
         return res.status(500).send(err.message);
     }
-};
-
+}
 // Update account details
 exports.updateUser = async (req, res) => {
-    const { userID, newContactInfo } = req.body;
-
-    if (!userID || !newContactInfo) {
-        return res.status(400).send('User ID and new contact info are required');
-    }
-
-    const contactInfoIsValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newContactInfo);
-    if (!contactInfoIsValid) {
-        return res.status(400).send('Invalid contact info format');
-    }
+    const { userID } = req.user; // Assuming JWT middleware populates req.user
+    const { username, email } = req.body;
 
     try {
         const user = await User.findByIdAndUpdate(
             userID,
-            { contactInfo: newContactInfo },
+            { username, email },
             { new: true } // Return updated document
         );
-
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        return res.status(200).send('Profile updated successfully');
+        return res.status(200).json(user);
     } catch (err) {
         console.error(err);
         return res.status(500).send(err.message);
@@ -76,7 +28,7 @@ exports.updateUser = async (req, res) => {
 };
 
 // Render sign up page
-exports.renderSignupPage = (req, res) => {
+exports.showSignupPage = (req, res) => {
     const signupContent = {
       title: "ParkName",
       siteName: "ParkName",

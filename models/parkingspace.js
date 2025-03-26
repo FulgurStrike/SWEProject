@@ -8,14 +8,8 @@ const parkingSpaceSchema = new Schema({
     parkingLot: {type: mongoose.Schema.Types.ObjectId, ref: 'ParkingLot'}
 });
 
-parkingSpaceSchema.methods.isAvailable = function () {
+parkingSpaceSchema.virtual('isAvailable').get(function () {
     return !this.isOccupied && !this.isReserved;
-};
-
-// Custom Method to get ParkingLot (if referenced)
-parkingSpaceSchema.methods.getParkingLot = async function () {
-    const parkingLot = await mongoose.model('ParkingLot').findById(this.parkingLot);
-    return parkingLot;
-};
+});
 
 module.exports = mongoose.model('ParkingSpace', parkingSpaceSchema);

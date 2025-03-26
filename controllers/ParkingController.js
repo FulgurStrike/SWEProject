@@ -4,6 +4,7 @@ const ParkingLot = require('../models/parkinglot');
 const ParkingSpace = require('../models/parkingspace');
 const ParkingRequest = require('../models/parkingrequest');
 
+// Assign parking space to the request
 router.post('/assign', async (req, res) => {
     const { requestID, spaceID } = req.body;
 
@@ -20,7 +21,6 @@ router.post('/assign', async (req, res) => {
             return res.status(400).send('Parking space is already occupied or reserved');
         }
 
-        // Assign parking space to the request
         parkingRequest.assignedspace = parkingSpace._id;
         parkingRequest.requeststatus = 'approved';
         await parkingRequest.save();
@@ -34,6 +34,7 @@ router.post('/assign', async (req, res) => {
     }
 });
 
+// Release parking space
 router.post('/release', async (req, res) => {
     const {spaceID} = req.body;
 
@@ -47,8 +48,8 @@ router.post('/release', async (req, res) => {
             return res.status(400).send('Parking space is not occupied')
         }
 
-        // Release parking space
         parkingSpace.isOccupied = false;
+        parkingSpace.isReserved = false;
         await parkingSpace.save();
         return res.status(200).send('Parking space released');
     } catch (err) {
@@ -56,30 +57,7 @@ router.post('/release', async (req, res) => {
     }
 });
 
-router.post('/update', async (req, res) => {
-    const { spaceID, status } = req.body;
-    
-    try {
-        const parkingSpace = await ParkingSpace.findById(spaceID);
-
-        if (!parkingSpace) {
-            return res.status(404).send('Parking space not found');
-        }
-
-        // Validate status value
-        if (status !== 'occupied' && status !== 'available') {
-            return res.status(400).send('Invalid status');
-        }
-
-        // Update parking space status
-        parkingSpace.isOccupied = status === 'occupied';
-        await parkingSpace.save();
-        return res.status(200).send('Parking space updated');
-    } catch (err) {
-        return res.status(500).send(err.message);
-    }
-});
-
+// Add parking space to lot
 router.post('/add', async (req, res) => {
     const { parkingLotID, spaceID } = req.body;
 
@@ -103,6 +81,7 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Remove parking space from the lot
 router.post('/remove', async (req, res) => {
     const { parkingLotID, spaceID } = req.body;
 
@@ -112,16 +91,23 @@ router.post('/remove', async (req, res) => {
             return res.status(404).send('Parking lot not found');
         }
 
-        // Remove parking space from the lot
-        parkingLot.parkingSpaces = parkingLot.parkingSpaces.filter(spaceID => spaceID.toString() !== spaceID);
-       
+        // Check if space exists in parkingSpaces[] array in parking lot model
+        const spaceIndex = parkingLot.parkingSpaces.indexOf(spaceID);
+        if (spaceIndex === -1) {
+            return res.status(404).send('Parking space not found in the parking lot');
+        }
+
+        // Remove space from parking lot
+        parkingLot.parkingSpaces.splice(spaceIndex, 1);
         await parkingLot.save();
+        
         return res.status(200).send('Parking space removed from lot');
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
+// Get available parking spaces
 router.get('/available', async (req, res) => {
     try {
         const availableSpaces = await ParkingSpace.find({ isOccupied: false, isReserved: false });
@@ -130,5 +116,20 @@ router.get('/available', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+
+// Get parking lot details
+router.get('/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const parkingLot = await ParkingLot.findById(id).populate('parkingSpaces');
+        if (!parkingLot) {
+            return res.status(404).send('Parking lot not found');
+        
+        }
+        return res.status(200).json(parkingLot);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+})
 
 module.exports = router;

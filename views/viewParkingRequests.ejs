@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Parking Requests</title>
+</head>
+<body>
+    <h1>Your Parking Requests</h1>
+
+    <% if (parkingRequests.length > 0) { %>
+        <ul>
+            <% parkingRequests.forEach(function(request) { %>
+                <li>
+                    <a href="/request/<%= request._id %>">
+                        Request ID: <%= request._id %> - Status: <%= request.requestStatus %> 
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>You have no parking requests.</p>
+    <% } %>
+
+    <a href="/">Back to Home</a>
+</body>
+</html>

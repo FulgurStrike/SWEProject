@@ -2,19 +2,28 @@ const Payment = require('../models/payment');
 
 // Make payment
 exports.makePayment = async (req, res) => {
-    const { driverID, amount, paymentMethod } = req.body;
+    const { parkingRequestID, amount } = req.body;
 
-    if (!driverID || !amount || !paymentMethod) {
+    if (!parkingRequestID || !amount) {
         return res.status(400).send('Missing required payment information');
     }
 
     try {
         const payment = new Payment({
-            driver: driverID,
-            amount,
-            paymentMethod,
+            parkingRequest: parkingRequestID,
+            amount: amount,
             paymentStatus: 'pending',
+            paymentDate: Date.now(),
         });
+
+        await payment.save();
+        // Simulate payment status change
+        const paymentSuccess = simulatePayment();
+        if (paymentSuccess) {
+            payment.paymentStatus = 'completed';
+        } else {
+            payment.paymentStatus = 'failed';
+        }
 
         await payment.save();
 
@@ -25,30 +34,10 @@ exports.makePayment = async (req, res) => {
     }
 };
 
-// Process payment
-exports.processPayment = async (req, res) => {
-    const { paymentID } = req.body;
+const simulatePayment = () => {
+    return Math.random() > 0.5;
+}
 
-    if (!paymentID) {
-        return res.status(400).send('Payment ID is required');
-    }
-
-    try {
-        const payment = await Payment.findById(paymentID);
-        if (!payment) {
-            return res.status(404).send('Payment not found');
-        }
-
-        // Simulate payment processing
-        payment.paymentStatus = 'completed';
-        await payment.save();
-
-        return res.status(200).send('Payment processed');
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send(err.message);
-    }
-};
 
 exports.renderPaymentPage = (req, res) => {
     const paymentContent = {

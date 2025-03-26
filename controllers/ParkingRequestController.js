@@ -1,41 +1,75 @@
-const express = require('express');
-const router = express.Router();
 const ParkingRequest = require('../models/parkingrequest');
-const ParkingSpace = require('../models/parkingspace');
+const DriverUser = require('../models/driveruser');
 
 // Create parking request
-router.post('/create', async (req, res) => {
-    const { driverID, destination, arrivaltime, departuretime } = req.body;
+exports.makeReservation = async (req, res) => {
+    const { driverID, arrivalTime, departureTime } = req.body;
+
+    if (!driverID || !arrivalTime || !departureTime) {
+        return res.status(400).send('Missing required fields');
+    }
 
     try {
         const parkingRequest = new ParkingRequest({
             driver: driverID,
-            destination,
-            arrivaltime,
-            departuretime,
+            arrivalTime,
+            departureTime,
         });
         await parkingRequest.save();
 
-        return res.status(201).json(parkingRequest);
+        res.render('viewParkingRequests')
     } catch (err) {
         return res.status(500).send(err.message);
     }
-});
+};
+
+// View all parking requests
+exports.viewUserParkingRequests = async (req, res) => {
+    const driverID = req.user._id;
+
+    try {
+        // Find all requests associated with logged-in user
+        const parkingRequests = await ParkingRequest.find({driver: driverID})
+            .populate('parkingSpace')
+            .populate('driver');
+        res.render('viewParkingRequests', { parkingRequests });
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
 
 // View parking request details
-router.get('/view/:requestID', async (req, res) => {
+exports.viewParkingRequest = async (req, res) => {
     const { requestID } = req.params;
 
     try {
-        const parkingRequest = await ParkingRequest.findById(requestID).populate('assignedspace');
+        const parkingRequest = await ParkingRequest.findById(requestID)
+            .populate('parkingSpace')
+            .populate('driver');
         if (!parkingRequest) {
             return res.status(404).send('Parking request not found');
         }
 
-        return res.status(200).json(parkingRequest);
+        res.render('viewParkingRequest', {parkingRequest});
     } catch (err) {
         return res.status(500).send(err.message);
     }
-});
+};
 
-module.exports = router;
+exports.showReservationPage = (req, res) => {
+    const indexContent = {
+      title: "ParkName",
+      siteName: "ParkName",
+      home: "Home",
+      about: "About",
+      services: "Services",
+      contact: "Contact",
+      login: "Login",
+      signUp: "Sign Up",
+      heroHeader: "Welcome to our Website",
+
+      footerText: "2025 Simple starter Website"
+    }
+    res.render('index', indexContent);
+};
+

@@ -3,6 +3,47 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 
+// Input validation
+const validatePassword = (password) => {
+    const minLength = 8;
+    const hasNumbers = /\d/;
+    const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/;
+    return password.length >= minLength && hasNumbers.test(password) && hasSpecialChars.test(password);
+} 
+
+// Register Account
+exports.registerUser = async (req, res) => {
+    const { username, email, password, role } = req.body;
+    
+    // Validate the password format
+    if (!validatePassword(password)) {
+        return res.status(400).send('Password does not meet the requirements.');
+    }
+
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            res.status(400).send('Username already exists');
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = new User({
+            username,
+            email,
+            password: hashedPassword,
+            role
+        });
+        await user.save();
+        return res.status(201).send('User registered successfully');
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send(err.message);
+    }
+};
+
+
 // Login to account
 exports.login = async (req, res) => {
     const { username, password } = req.body;
@@ -36,7 +77,7 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.renderLoginPage = (req, res) => {
+exports.showLoginPage = (req, res) => {
     const loginContent = {
       title: "ParkName",
       siteName: "ParkName",
