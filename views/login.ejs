@@ -32,8 +32,8 @@
         <form action="/login" method="POST">
 
             <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
-                <input type="email" id="email" name="email" class="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Email Address" required>
+              <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
+              <input type="email" id="email" name="email" class="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="someone@example.com" value="" required>
             </div>
       
             <div class="mb-4">
@@ -42,6 +42,7 @@
             </div>
                 
             <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">Log in</button>
+            <p class="block text-sm font-medium text-red-600"><%=invalidCredentials %></p>
 
             <div class="mt-4 text-center">
                 <p class="text-sm text-gray-600">

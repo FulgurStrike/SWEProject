@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const User = require("../models/driveruser");
+const { createHash } = require('crypto');
 
-router.get('/login', (req, res) => {
-    const loginContent = {
+const loginContent = {
       title: "ParkName",
       siteName: "ParkName",
       home: "Home",
@@ -11,24 +12,32 @@ router.get('/login', (req, res) => {
       contact: "Contact",
       login: "Login",
       signUp: "Sign Up",
-      footerText: "2025 Simple starter website"
+      footerText: "2025 Simple starter website",
+      invalidCredentials: "",
     }
 
-    res.render('login', loginContent)
+router.get('/login', (req, res) => {
+  res.render('login', loginContent)
 });
 
-router.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    
-    const validEmail = 'user@example.com';
-    const validPassword = 'password';
+function hashPassword(passwd) {
+ return createHash('sha256').update(passwd).digest('hex');
+}
 
-    if (email === validEmail && password === validPassword) {
-      req.session.user = { email };
-      res.redirect('/');
-    } else {
-      res.send('invalid credentials');
-    }
+router.post('/login', async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  userQuery = await User.findOne({ "email": `${email}` });
+
+  if (email === userQuery.email && hashPassword(password) === userQuery.password) {
+    req.session.user = { email };
+    res.redirect('/');
+  } else {
+    loginContent.invalidCredentials = "Invalid credentials try again";
+    res.render('login', loginContent);
+    loginContent.invalidCredentials = "";
+  } 
 });
 
 module.exports = router;
