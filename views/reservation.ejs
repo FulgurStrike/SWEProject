@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation</title>
+  <meta lang="en-GB">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width", initial-scale="1">
+  <link rel="stylesheet" href="/output.css">
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -13,7 +16,6 @@
       <ul class="flex space-x-6">
         <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
         <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
-        <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
         <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
         <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
         <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
@@ -23,10 +25,9 @@
 
   <!-- Reservation form -->
   <div class="max-w-7x1 mx-auto grid grid-cols-2 gap-8 p-8">
-    <div class="bg-white p-6 rounded-lg shadow-lg"></div>
-        <h2 class="text-2xl font-semibold mb-6 text-center">Reserve Your Parking Spot</h2>
+    <div class="bg-white p-6 rounded-lg shadow-lg">
         <form action="/payment" method="POST">
-            
+        <h2 class="text-2xl font-semibold mb-6 text-left">Reserve Your Parking Spot</h2>    
             <div class="mb-4">
                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                 <input type="text" id="location" name="location" class="w-full p-3 border border-gray-300 rounded-md" required>
@@ -55,7 +56,7 @@
 
     <!-- Map -->
     <div class="bg-white p-6 rounded-lg shadow-lg flex justify-center items-center">
-        <img src="https://via.placeholder.com/600x400" alt="Map" class="w-full h-auto rounded-lg shadow-md">
+        <img src="/images/campusmap.png" alt="Map" class="w-full h-full rounded-lg shadow-md">
     </div>
   </div>
 

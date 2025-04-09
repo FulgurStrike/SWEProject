@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const dotenv = require('dotenv');
 
-const indexRoutes = require('./routes/indexRoutes');
 const loginRoutes = require('./routes/loginRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const signupRoutes = require('./routes/signupRoutes');
@@ -44,7 +43,6 @@ class PMS {
     await connectDB();
     
     // Routes
-    this.pms.use(indexRoutes);
     this.pms.use(loginRoutes);
     this.pms.use(reservationRoutes);
     this.pms.use(signupRoutes);
