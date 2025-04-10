@@ -20,4 +20,9 @@ router.get('/', (req, res) => {
     res.render('reservation', loginContent);
 });
 
+router.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
+});
+
 module.exports = router;
