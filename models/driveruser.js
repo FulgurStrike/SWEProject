@@ -1,18 +1,14 @@
-
-const User = require('./user.js');
 const mongoose = require('mongoose');
+const User = require('./user');
 
 const driverUserSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  reg: String,
+  driverID: String
 });
 
-driverUserSchema.methods.getDriverID = function() {
-    return this.driverID;
-}
+driverUserSchema.methods.getDriverID = function () {
+  return this.driverID;
+};
 
-DriverUser = User.discriminator('DiverUser', driverUserSchema);
+const DriverUser = User.discriminator('DriverUser', driverUserSchema);
 
-module.exports = DriverUser
-
+module.exports = DriverUser;
