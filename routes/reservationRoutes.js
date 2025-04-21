@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    // if (!req.session.user) {
-    //   return res.redirect('/login');
-    // }
+     // if (!req.session.user) {
+     //   return res.redirect('/login');
+     // }
 
-    const loginContent = {
+    const reservationContent = {
       title: "ParkName",
       siteName: "ParkName",
       home: "Home",
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
       footerText: "2025 Simple starter website"
     }  
 
-    res.render('reservation', loginContent);
+    res.render('reservation', reservationContent);
 });
 
 router.get('/logout', (req, res) => {
