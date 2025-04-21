@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { createHash } = require('crypto');
-const User = require('../models/driveruser');
+const DriverUser = require('../models/driveruser');
 
 
 router.get('/signup', (req, res) => {
@@ -38,7 +38,8 @@ router.post('/', async (req, res) => {
 
   const password = hashPassword(req.body.password);
 
-  const user = new User({
+  const user = new DriverUser({
+    driverID: Math.floor(Math.random() * 1000000) + 1,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
