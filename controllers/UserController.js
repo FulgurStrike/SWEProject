@@ -12,7 +12,7 @@ const validatePassword = (password) => {
 
 // Register Account
 exports.registerUser = async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { email, password, role } = req.body;
     
     // Validate the password format
     if (!validatePassword(password)) {
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
     }
 
     try {
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).send('Username already exists');
         }
@@ -42,7 +42,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-exports.showUserProfile() = async (req, res) => {
+exports.showUserProfile = async (req, res) => {
     const { userID } = req.user; // Assuming JWT middleware populates req.user
     try {
         const user = await User.findById(userID);

@@ -70,6 +70,6 @@ exports.showReservationPage = (req, res) => {
 
       footerText: "2025 Simple starter Website"
     }
-    res.render('index', indexContent);
+    res.render('reservation', indexContent);
 };
 
