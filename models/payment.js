@@ -1,39 +1,12 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const paymentSchema = new mongoose.Schema({
-  paymentID: String,
-  driver: { type: mongoose.Schema.Types.ObjectId, ref: 'DriverUser' },
-  amount: Number,
-  paymentMethod: String,
-  paymentStatus: String
+const paymentSchema = new Schema({
+    parkingRequest: {type: mongoose.Schema.Types.ObjectId, ref: 'ParkingRequest', required: true},
+    amount: {type: Number, required: true},
+    paymentStatus: {type: String, enum: ['pending', 'completed', 'failed'], required: true},
+    paymentDate: {type: Date, required: true, default: Date.now},
 });
 
-paymentSchema.methods.getPaymentID = function () {
-  return this.paymentID;
-};
-
-paymentSchema.methods.getAmount = function () {
-  return this.amount;
-};
-
-paymentSchema.methods.updateAmount = function (newAmount) {
-  this.amount = newAmount;
-};
-
-paymentSchema.methods.getPaymentMethod = function () {
-  return this.paymentMethod;
-};
-
-paymentSchema.methods.updatePaymentMethod = function (newMethod) {
-  this.paymentMethod = newMethod;
-};
-
-paymentSchema.methods.getPaymentStatus = function () {
-  return this.paymentStatus;
-};
-
-paymentSchema.methods.updatePaymentStatus = function (newStatus) {
-  this.paymentStatus = newStatus;
-};
-
 module.exports = mongoose.model('Payment', paymentSchema);
+

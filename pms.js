@@ -1,8 +1,6 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-//const fileSystem = require('fs');
-//const { title } = require('process');
 const cookieSession = require('cookie-session');
 const dotenv = require('dotenv');
 

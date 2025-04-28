@@ -1,26 +1,15 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const parkingLotSchema = new mongoose.Schema({
-  parkingLotID: Number,
-  lotName: String,
-  capacity: Number,
-  parkingSpaces: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ParkingSpace' }]
+const parkingLotSchema = new Schema({
+    lotName: {type: String, required: true},
+    capacity: {type: Number, required: true},
+    parkingSpaces: [{type: mongoose.Schema.Types.ObjectId, ref: 'ParkingSpace'}],
+    availableSpaces: {type: Number, default: 0 }
 });
 
-parkingLotSchema.methods.getParkingLotID = function () {
-  return this.parkingLotID;
-};
-
-parkingLotSchema.methods.getLotName = function () {
-  return this.lotName;
-};
-
-parkingLotSchema.methods.getCapacity = function () {
-  return this.capacity;
-};
-
-parkingLotSchema.methods.getParkingSpaces = function () {
-  return this.parkingSpaces;
-};
+parkingLotSchema.virtual('availableSpaces').get(function() {
+    return this.parkingSpaces.filter(space => !space.isOccupied && !space.isReserved);
+});
 
 module.exports = mongoose.model('ParkingLot', parkingLotSchema);
