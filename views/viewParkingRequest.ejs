@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Request Details</title>
+</head>
+<body>
+    <h1>Parking Request Details</h1>
+
+    <p><strong>Driver:</strong> <%= parkingRequest.driver.name %></p>
+    <p><strong>Arrival Time:</strong> <%= parkingRequest.arrivalTime %></p>
+    <p><strong>Departure Time:</strong> <%= parkingRequest.departureTime %></p>
+    <p><strong>Parking Space:</strong> <%= parkingRequest.parkingSpace.spaceID %></p>
+    <p><strong>Request Status:</strong> <%= parkingRequest.requestStatus %></p>
+
+    <a href="/requests">Back to Your Requests</a>
+</body>
+</html>
