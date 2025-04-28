@@ -42,7 +42,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-exports.showUserProfile() = async (req, res) => {
+exports.showUserPofile = async (req, res) => {
     const { userID } = req.user; // Assuming JWT middleware populates req.user
     try {
         const user = await User.findById(userID);

@@ -63,7 +63,8 @@ exports.showLoginPage = (req, res) => {
       contact: "Contact",
       login: "Login",
       signUp: "Sign Up",
-      footerText: "2025 Simple starter website"
+      footerText: "2025 Simple starter website",
+      invalidCredentials: ""
     }
 
     res.render('login', loginContent)
