@@ -11,9 +11,8 @@ const validatePassword = (password) => {
 
 // Register Account
 exports.registerUser = async (req, res) => {
+
     const { firstName, lastName, email, password, reg } = req.body;
-    
-    res.send(`${firstName} ${lastName} ${email} ${password} ${reg}`)
     
     // Validate the password format
     if (!validatePassword(password)) {
@@ -21,7 +20,9 @@ exports.registerUser = async (req, res) => {
     }
 
     try {
+
         const existingUser = await DriverUser.findOne({ email });
+
         if (existingUser) {
             return res.send('Email already exists');
         }
@@ -70,6 +71,7 @@ exports.registerUser = async (req, res) => {
 //         return res.status(500).send(err.message);
 //     }
 // };
+
 
 // Render sign up page
 exports.showSignupPage = (req, res) => {
