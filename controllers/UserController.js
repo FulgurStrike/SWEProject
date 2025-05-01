@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
-const driveruser = require('../models/driveruser');
+const DriverUser = require('../models/driveruser');
 
 // Input validation
 const validatePassword = (password) => {
@@ -12,62 +11,65 @@ const validatePassword = (password) => {
 
 // Register Account
 exports.registerUser = async (req, res) => {
-    const { username, email, password, role } = req.body;
+    const { firstName, lastName, email, password, reg } = req.body;
+    
+    res.send(`${firstName} ${lastName} ${email} ${password} ${reg}`)
     
     // Validate the password format
     if (!validatePassword(password)) {
-        return res.status(400).send('Password does not meet the requirements.');
+         return res.send('Password does not meet the requirements.');
     }
 
     try {
-        const existingUser = await User.findOne({ username });
+        const existingUser = await DriverUser.findOne({ email });
         if (existingUser) {
-            return res.status(400).send('Username already exists');
+            return res.send('Email already exists');
         }
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({
-            username,
-            email,
+        const user = new DriverUser({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,  
             password: hashedPassword,
-            role
+            reg: reg
         });
         await user.save();
-        return res.status(201).send('User registered successfully');
+        return res.send('User registered successfully');
     } catch (err) {
         console.error(err);
-        return res.status(500).send(err.message);
+        return res.send(err.message);
     }
 };
 
-exports.showUserProfile() = async (req, res) => {
-    const { userID } = req.user; // Assuming JWT middleware populates req.user
-    try {
-        const user = await User.findById(userID);
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(500).send(err.message);
-    }
-}
-// Update account details
-exports.updateUser = async (req, res) => {
-    const { userID } = req.user; // Assuming JWT middleware populates req.user
-    const { username, email } = req.body;
-
-    try {
-        const user = await User.findByIdAndUpdate(
-            userID,
-            { username, email },
-            { new: true } // Return updated document
-        );
-        return res.status(200).json(user);
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send(err.message);
-    }
-};
+// exports.showUserProfile = async (req, res) => {
+//     const { userID } = req.user; // Assuming JWT middleware populates req.user
+//     try {
+//         const user = await User.findById(userID);
+//         return res.status(200).json(user);
+//     } catch (err) {
+//         return res.status(500).send(err.message);
+//     }
+// }
+// // Update account details
+// exports.updateUser = async (req, res) => {
+//     const { userID } = req.user; // Assuming JWT middleware populates req.user
+//     const { email } = req.body;
+//
+//     try {
+//         const user = await DriverUser.findByIdAndUpdate(
+//             userID,
+//             { email },
+//             { new: true } // Return updated document
+//         );
+//         return res.status(200).json(user);
+//     } catch (err) {
+//         console.error(err);
+//         return res.status(500).send(err.message);
+//     }
+// };
 
 // Render sign up page
 exports.showSignupPage = (req, res) => {
