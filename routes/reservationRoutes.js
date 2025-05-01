@@ -8,3 +8,4 @@ router.get('/requests', ParkingRequestController.viewUserParkingRequests);
 router.get('/request/:requestID', ParkingRequestController.viewParkingRequest);
 
 module.exports = router;
+
