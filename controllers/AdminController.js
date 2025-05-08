@@ -11,7 +11,7 @@ exports.viewUserParkingRequests = async (req, res) => {
         if (parkingRequests.length === 0) {
             return res.status(404).send('No parking requests found for this user');
         }
-        res.render('admin/viewUserParkingRequests', {parkingRequests, userID});
+        res.render('adminDashboard/viewUserParkingRequests', {parkingRequests, userID});
     } catch (error) {
         return res.status(500).send(err.message);
     }

@@ -7,7 +7,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
      if (!email || !password) {
-         return res.send('Username and password required');
+         return res.send('email and password required');
      }
 
     try {
@@ -23,12 +23,18 @@ exports.login = async (req, res) => {
             return res.send('Invalid credentials');
         }
         // Create JWT token with user info
-        // const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, process.env.JWT_TOKEN, { expiresIn: '5h' });
+        const token = jwt.sign(
+            { userId: user._id, email: user.email }, 
+            process.env.JWT_TOKEN,
+            { expiresIn: '5h' }
+        );
         
-        // JWT Needs fixing. I am not sure how to do it - Aiden
         
-        // Set JWT token into cookie
-        // res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        // Set JWT token as HTTP-only cookie
+        res.cookie('auth_token', token, {
+            httpOnly: true, 
+            maxAge: 5 * 60 * 60 * 1000 // 5 hours
+        });
 
         return res.redirect('/');
     } catch (err) {
@@ -48,9 +54,9 @@ exports.authenticateToken = (req, res, next) => {
     const token = req.cookies.auth_token;
     if (!token) return res.redirect('/login');
 
-    jwt.verify(token, process.env.JWT_TOKEN, (err, user) => {
+    jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
         if (err) return res.sendStatus(403);
-        req.user = user;
+        req.user = decoded;
         next();
     });
 };

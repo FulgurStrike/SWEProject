@@ -3,7 +3,9 @@ const DriverUser = require('../models/driveruser');
 
 // Create parking request
 exports.makeReservation = async (req, res) => {
-    const { driverID, arrivalTime, departureTime } = req.body;
+    const driverID = req.user.userId;
+    const { arrivalTime, departureTime } = req.body;
+    console.log(req.body);
 
     if (!driverID || !arrivalTime || !departureTime) {
         return res.status(400).send('Missing required fields');
@@ -12,12 +14,12 @@ exports.makeReservation = async (req, res) => {
     try {
         const parkingRequest = new ParkingRequest({
             driver: driverID,
-            arrivalTime,
-            departureTime,
+            arrivalTime: new Date(arrivalTime),
+            departureTime: new Date(departureTime)
         });
         await parkingRequest.save();
 
-        res.render('viewParkingRequests')
+        res.redirect(`/payment?requestId=${parkingRequest._id}`);
     } catch (err) {
         return res.status(500).send(err.message);
     }
@@ -25,7 +27,7 @@ exports.makeReservation = async (req, res) => {
 
 // View all parking requests
 exports.viewUserParkingRequests = async (req, res) => {
-    const driverID = req.user._id;
+    const driverID = req.user.userId;
 
     try {
         // Find all requests associated with logged-in user

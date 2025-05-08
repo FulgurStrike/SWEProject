@@ -38,7 +38,8 @@ exports.registerUser = async (req, res) => {
             reg: reg
         });
         await user.save();
-        return res.send('User registered successfully');
+        //return res.send('User registered successfully');
+        res.redirect('/login');
     } catch (err) {
         console.error(err);
         return res.send(err.message);
@@ -48,7 +49,7 @@ exports.registerUser = async (req, res) => {
 // exports.showUserProfile = async (req, res) => {
 //     const { userID } = req.user; // Assuming JWT middleware populates req.user
 //     try {
-//         const user = await User.findById(userID);
+//         const user = await User.findById(userId);
 //         return res.status(200).json(user);
 //     } catch (err) {
 //         return res.status(500).send(err.message);
@@ -56,7 +57,7 @@ exports.registerUser = async (req, res) => {
 // }
 // // Update account details
 // exports.updateUser = async (req, res) => {
-//     const { userID } = req.user; // Assuming JWT middleware populates req.user
+//     const { userId } = req.user; // Assuming JWT middleware populates req.user
 //     const { email } = req.body;
 //
 //     try {

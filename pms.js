@@ -3,8 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const loginRoutes = require('./routes/loginRoutes');
-const indexRoutes = require('./routes/indexRoutes');
+const indexRoutes = require('./routes/reservationRoutes');
 const signupRoutes = require('./routes/signupRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
@@ -22,6 +23,7 @@ class PMS {
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
     this.pms.use(bodyParser.urlencoded({extended: true}));
+    this.pms.use(cookieParser());
 
     // Passes the login status to the views
     this.pms.use((req, res, next) => {
@@ -57,7 +59,7 @@ class PMS {
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);
-      console.log(`http::/localhost:${this.PORT}`);
+      console.log(`http://localhost:${this.PORT}`);
     });
 
   }   
