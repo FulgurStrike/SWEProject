@@ -1,26 +1,37 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+
+const loginContent = (invalidCredentials = '') => ({
+    title: "ParkName",
+    siteName: "ParkName",
+    home: "Home",
+    about: "About",
+    services: "Services",
+    contact: "Contact",
+    login: "Login",
+    signUp: "Sign Up",
+    footerText: "2025 Simple starter website",
+    invalidCredentials
+});
   
 // Login to account
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
      if (!email || !password) {
-         return res.send('email and password required');
+         return res.render('login', loginContent('email and password required'));
      }
 
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            //return res.status(404).send('User not found');
-            return res.send('Invalid credentials');
+            return res.render('login', loginContent('invalid credentials'));
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            //return res.status(400).send('Invalid credentials');
-            return res.send('Invalid credentials');
+            return res.render('login', loginContent('invalid credentials'));
         }
         // Create JWT token with user info
         const token = jwt.sign(
@@ -39,7 +50,7 @@ exports.login = async (req, res) => {
         return res.redirect('/');
     } catch (err) {
         console.error(err);
-        return res.send(err.message);
+        return res.render('login', loginContent(err.message));
     }
 };
 
@@ -63,19 +74,6 @@ exports.authenticateToken = (req, res, next) => {
 
 
 exports.showLoginPage = (req, res) => {
-    const loginContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      footerText: "2025 Simple starter website",
-      invalidCredentials: ""
-
-    }
-
-    res.render('login', loginContent)
+    res.render('login', loginContent())
 };
+
