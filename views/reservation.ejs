@@ -28,7 +28,7 @@
   <!-- Reservation form -->
   <div class="max-w-7x1 mx-auto grid grid-cols-2 gap-8 p-8">
     <div class="bg-white p-6 rounded-lg shadow-lg">
-        <form action="/payment" method="POST">
+        <form action="/reservation" method="POST">
         <h2 class="text-2xl font-semibold mb-6 text-left">Reserve Your Parking Spot</h2>    
             <div class="mb-4">
                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
@@ -36,13 +36,13 @@
             </div>
             
             <div class="mb-4">
-                <label for="from" class="block text-sm font-medium text-gray-700">From</label>
-                <input type="datetime-local" id="from" name="from" class="w-full p-3 border border-gray-300 rounded-md" required>
+                <label for="arrivalTime" class="block text-sm font-medium text-gray-700">From</label>
+                <input type="datetime-local" id="arrivalTime" name="from" class="w-full p-3 border border-gray-300 rounded-md" required>
             </div>
             
             <div class="mb-4">
-                <label for="to" class="block text-sm font-medium text-gray-700">To</label>
-                <input type="datetime-local" id="to" name="to" class="w-full p-3 border border-gray-300 rounded-md" required>
+                <label for="departureTime" class="block text-sm font-medium text-gray-700">To</label>
+                <input type="datetime-local" id="departureTime" name="to" class="w-full p-3 border border-gray-300 rounded-md" required>
             </div>
             
             <div class="mb-4">

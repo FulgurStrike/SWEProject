@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const dotenv = require('dotenv');
+const cookieparser = require('cookie-parser');
 
 const loginRoutes = require('./routes/loginRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
@@ -25,6 +26,7 @@ class PMS {
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
     this.pms.use(bodyParser.urlencoded({extended: true}));
+    this.pms.use(cookieparser());
 
     // Store the session
     this.pms.use(cookieSession({

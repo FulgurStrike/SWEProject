@@ -2,7 +2,10 @@ const Payment = require('../models/payment');
 
 // Make payment
 exports.makePayment = async (req, res) => {
-    const { parkingRequestID, amount } = req.body;
+    const { amount } = req.body;
+
+    parkingRequestID = req.cookies.requestID;
+    console.log(parkingRequestID);
 
     if (!parkingRequestID || !amount) {
         return res.status(400).send('Missing required payment information');

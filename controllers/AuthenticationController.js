@@ -1,6 +1,20 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+
+const loginContent = {
+      title: "ParkName",
+      siteName: "ParkName",
+      home: "Home",
+      about: "About",
+      services: "Services",
+      contact: "Contact",
+      login: "Login",
+      signUp: "Sign Up",
+      footerText: "2025 Simple starter website",
+      invalidCredentials: ""
+
+    }
   
 // Login to account
 exports.login = async (req, res) => {
@@ -14,21 +28,27 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             //return res.status(404).send('User not found');
-            return res.send('Invalid credentials');
+          loginContent.invalidCredentials = "Wrong Username or Password";
+          res.render("login", loginContent);
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             //return res.status(400).send('Invalid credentials');
-            return res.send('Invalid credentials');
+            loginContent.invalidCredentials = "Wrong Username or Password";
+            res.render("login", loginContent);
         }
         // Create JWT token with user info
-        // const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, process.env.JWT_TOKEN, { expiresIn: '5h' });
+        const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, process.env.JWT_TOKEN, { expiresIn: '5h' });
         
         // JWT Needs fixing. I am not sure how to do it - Aiden
         
         // Set JWT token into cookie
-        // res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        
+        const userID = user.get("_id").toString();
+        console.log(userID);
+        res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        res.cookie('user_id', userID);
 
         return res.redirect('/');
     } catch (err) {
@@ -57,19 +77,7 @@ exports.authenticateToken = (req, res, next) => {
 
 
 exports.showLoginPage = (req, res) => {
-    const loginContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      footerText: "2025 Simple starter website",
-      invalidCredentials: ""
-
-    }
+    
 
     res.render('login', loginContent)
 };
