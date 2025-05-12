@@ -10,26 +10,31 @@
 <body class="bg-gray-100">
 
   <!-- Navbar -->
-  <nav class="bg-blue-600 text-white p-4">
+  <nav class="bg-blue-500 text-white p-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-xl font-bold">Admin Dashboard</div>
-      <ul class="flex space-x-6">
-        <li><a href="/" class="hover:text-gray-300">Home</a></li>
-        <li><a href="/logout" class="hover:text-gray-300">Logout</a></li>
-      </ul>
+        <div class="text-xl"><%= siteName || 'placeholder' %></div>
+        <ul class="flex space-x-6">
+            <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
+            <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
+            <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
+            <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
+            <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
+            <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
+        </ul>   
     </div>
-  </nav>
+    </nav>
 
-     <!-- Main Section -->
+
+    <!-- Main Section -->
   <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
 
     <!-- Left: Booking Requests List -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
+    <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto">
       <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
       <ul class="space-y-4 overflow-y-auto max-h-[400px]">
     
           <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer" onclick="selectRequest(1)">
-            <p><strong>Name:</strong> booking name</p>
+            <p><strong>Name:</strong> booking name</p>                      <!--replace all with ejs statements-->
             <p><strong>From:</strong> booking from</p>
             <p><strong>To:</strong> booking to</p>
             <p><strong>Vehicle:</strong> booking reg</p>
@@ -39,19 +44,19 @@
     </div>
 
     <!-- Right: Selected Booking Details -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
+    <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto">
       <h2 class="text-2xl font-semibold mb-4 text-blue-600">Selected Request</h2>
       <div id="selectedRequest" class="text-gray-700 space-y-3">
         <p>Select a request from the left to view details.</p>
       </div>
-      <div class="mt-6 flex space-x-4">
+      <div class="mt-6 flex space-x-8 md:content-evenly">
         <form action="/admin/accept" method="POST">
           <input type="hidden" id="acceptId" name="id" />
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Accept</button>
+          <button type="submit" class="bg-green-600 text-white w-full px-10 py-6 rounded-md hover:bg-green-700">Accept</button>
         </form>
         <form action="/admin/reject" method="POST">
           <input type="hidden" id="rejectId" name="id" />
-          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Reject</button>
+          <button type="submit" class="bg-red-600 text-white w-full px-10 py-6 rounded-md hover:bg-red-700">Reject</button>
         </form>
       </div>
     </div>

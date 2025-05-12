@@ -55,8 +55,8 @@ exports.rejectParkingRequest = async (req, res) => {
 };
 exports.renderAdminPage = (req, res) => {
     const adminContent = {
-      title: "ParkName",
-      siteName: "ParkName",
+      title: "Parking system",
+      siteName: "PMS Admin Dashboard",
       home: "Home",
       about: "About",
       services: "Services",
