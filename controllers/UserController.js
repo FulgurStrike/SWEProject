@@ -1,23 +1,25 @@
 const bcrypt = require('bcrypt');
 const DriverUser = require('../models/driveruser');
 
-// Input validation
+/* Input validation
 const validatePassword = (password) => {
     const minLength = 8;
     const hasNumbers = /\d/;
     const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/;
     return password.length >= minLength && hasNumbers.test(password) && hasSpecialChars.test(password);
-} 
+}
+*/ 
 
 // Register Account
 exports.registerUser = async (req, res) => {
 
     const { firstName, lastName, email, password, reg } = req.body;
     
-    // Validate the password format
+    /* Validate the password format
     if (!validatePassword(password)) {
          return res.send('Password does not meet the requirements.');
     }
+    */
 
     try {
 
@@ -38,7 +40,7 @@ exports.registerUser = async (req, res) => {
             reg: reg
         });
         await user.save();
-        //return res.send('User registered successfully');
+        
         res.redirect('/login');
     } catch (err) {
         console.error(err);

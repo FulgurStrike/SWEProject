@@ -6,6 +6,9 @@ exports.makeReservation = async (req, res) => {
     const driverID = req.user.userId;
     const { arrivalTime, departureTime } = req.body;
     console.log(req.body);
+    if(arrivalTime > departureTime){
+        return res.status(400).send("arrival time after depature time");
+    }
 
     if (!driverID || !arrivalTime || !departureTime) {
         return res.status(400).send('Missing required fields');

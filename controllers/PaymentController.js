@@ -12,10 +12,12 @@ exports.makePayment = async (req, res) => {
     }
 
     try {
-        const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver').populate('parkingSpace');
+        //const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver').populate('parkingSpace');
+        /*
         if (!parkingRequest) {
             return res.status(400).send('Parking request not found');
         }
+        */
 
         const arrival = new Date(parkingRequest.arrivalTime);
         const departure = new Date(parkingRequest.departureTime);
