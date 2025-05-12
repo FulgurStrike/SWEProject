@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help & Contact</title>
+  <link rel="stylesheet" href="/output.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="text-xl"><%= siteName || 'Parking System' %></div>
+      <ul class="flex space-x-6">
+        <li><a href="/" class="hover:text-gray-300">Home</a></li>
+        <li><a href="/about" class="hover:text-gray-300">About</a></li>
+        <li><a href="/contact" class="hover:text-gray-300">Contact</a></li>
+        <li><a href="/login" class="hover:text-gray-300">Login</a></li>
+        <li><a href="/signup" class="hover:text-gray-300">Sign Up</a></li>
+        <li><a href="/logout" class="hover:text-gray-300">Logout</a></li>
+        <li><a href="/help" class="hover:text-gray-300 font-semibold">Help</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Help and Contact Grid -->
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+    
+    <!-- Help Instructions -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-4 text-blue-600">How to Use This Webpage</h2>
+      <ol class="list-decimal list-inside text-gray-700 space-y-2">
+        <li>Log in or create an account to begin.</li>
+        <li>Navigate to the home/reservation page from the header.</li>
+        <li>Enter your desired location, time, and vehicle registration.</li>
+        <li>Click the "Reserve Spot" button.</li>
+        <li>Complete your payment using one of the available methods.</li>
+      </ol>
+
+      <h3 class="mt-6 text-xl font-semibold text-blue-600">FAQs</h3>
+      <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+        <li><strong>Q:</strong> Can I cancel my reservation?<br><strong>A:</strong> Yes, go to your profile to manage reservations.</li>
+        <li><strong>Q:</strong> What if I’m running late?<br><strong>A:</strong> Please notify support through the contact form.</li>
+        <li><strong>Q:</strong> Do I need to print anything?<br><strong>A:</strong> No, your license plate will be recognized automatically.</li>
+      </ul>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-4 text-blue-600">Contact Us</h2>
+      <form action="/submit-contact" method="POST" class="space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-md" required>
+        </div>
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-md" required></textarea>
+        </div>
+        <div class="text-right">
+          <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">Send Message</button>
+        </div>
+      </form>
+        <h3 class="mt-6 text-xl font-semibold text-blue-600"><%=submitMessage%></h3>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="max-w-7xl mx-auto text-center">
+      <p>&copy; <%= footerText || '2025 Parking Management System' %></p>
+    </div>
+  </footer>
+
+</body>
+</html>
