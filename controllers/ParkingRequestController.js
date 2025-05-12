@@ -17,7 +17,8 @@ exports.makeReservation = async (req, res) => {
         });
         await parkingRequest.save();
 
-        res.render('viewParkingRequests')
+        const requestID = parkingRequest._id;
+        res.render('viewParkingRequests', {requestID})
     } catch (err) {
         return res.status(500).send(err.message);
     }
@@ -25,6 +26,7 @@ exports.makeReservation = async (req, res) => {
 
 // View all parking requests
 exports.viewUserParkingRequests = async (req, res) => {
+    
     const driverID = req.user._id;
 
     try {
