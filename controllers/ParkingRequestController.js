@@ -1,18 +1,36 @@
 const ParkingRequest = require('../models/parkingrequest');
 const DriverUser = require('../models/driveruser');
 
+
+String.prototype.toObjectId = function() {
+  var ObjectId = (require('mongoose').Types.ObjectId);
+  return new ObjectId(this.toString());
+};
+
 // Create parking request
 exports.makeReservation = async (req, res) => {
     const driverID = req.user.userId;
-    const { arrivalTime, departureTime } = req.body;
+    const { location, arrivalTime, departureTime, registration } = req.body;
     console.log(req.body);
     if(arrivalTime > departureTime){
         return res.status(400).send("arrival time after depature time");
     }
 
-    if (!driverID || !arrivalTime || !departureTime) {
-        return res.status(400).send('Missing required fields');
-    }
+    console.log(location, arrivalTime, departureTime, registration);
+
+    console.log(req.cookies)
+  
+
+    driverID = req.cookies.user_id;
+    console.log(driverID);
+
+
+    driver = await DriverUser.findById(driverID).exec();
+    console.log(driver.email);
+
+    // if (!driverID || !arrivalTime || !departureTime) {
+    //     return res.status(400).send('Missing required fields');
+    // }
 
     try {
         const parkingRequest = new ParkingRequest({
@@ -23,6 +41,11 @@ exports.makeReservation = async (req, res) => {
         await parkingRequest.save();
 
         res.redirect(`/payment?requestId=${parkingRequest._id}`);
+
+        const requestID = parkingRequest.get("_id");
+        res.cookie("requestID", requestID);  
+
+        //res.render('viewParkingRequests')
     } catch (err) {
         return res.status(500).send(err.message);
     }

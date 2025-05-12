@@ -15,7 +15,12 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
+<<<<<<< HEAD
     "dotenv": "^16.5.0",
+=======
+    "cookie-session": "^2.1.0",
+    "dotenv": "^16.4.7",
+>>>>>>> a00cff792bf39b106363139141b717c88b0e716e
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",

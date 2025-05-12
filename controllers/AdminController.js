@@ -53,4 +53,18 @@ exports.rejectParkingRequest = async (req, res) => {
         return res.status(500).send(err.message);
     }
 };
+exports.renderAdminPage = (req, res) => {
+    const adminContent = {
+      title: "ParkName",
+      siteName: "ParkName",
+      home: "Home",
+      about: "About",
+      services: "Services",
+      contact: "Contact",
+      login: "Login",
+      signUp: "Sign Up",
+      footerText: "2025 Parkname Management System"
+    }
+    res.render('adminDashboard', adminContent)
+};
 

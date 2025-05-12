@@ -38,14 +38,13 @@ exports.login = async (req, res) => {
             { userId: user._id, email: user.email }, 
             process.env.JWT_TOKEN,
             { expiresIn: '5h' }
-        );
+        );       
         
-        
-        // Set JWT token as HTTP-only cookie
-        res.cookie('auth_token', token, {
-            httpOnly: true, 
-            maxAge: 5 * 60 * 60 * 1000 // 5 hours
-        });
+        // Set JWT token into cookie
+        const userID = User.get("_id").toString();
+        console.log(userID);
+        res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        res.cookie('user_id', userID);
 
         return res.redirect('/');
     } catch (err) {
@@ -71,7 +70,6 @@ exports.authenticateToken = (req, res, next) => {
         next();
     });
 };
-
 
 exports.showLoginPage = (req, res) => {
     res.render('login', loginContent())

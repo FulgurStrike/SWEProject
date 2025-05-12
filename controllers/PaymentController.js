@@ -5,7 +5,14 @@ const rate_per_minute = 0.5;
 
 // Make payment
 exports.makePayment = async (req, res) => {
-    const { parkingRequestID } = req.body;
+// <<<<<<< HEAD
+//     const { parkingRequestID } = req.body;
+// =======
+//     const { amount } = req.body;
+
+//     parkingRequestID = req.cookies.requestID;
+//     console.log(parkingRequestID);
+// >>>>>>> a00cff792bf39b106363139141b717c88b0e716e
 
     if (!parkingRequestID) {
         return res.status(400).send('Missing required payment information');
@@ -47,8 +54,6 @@ exports.makePayment = async (req, res) => {
 };
 
 
-
-
 exports.renderPaymentPage = async (req, res) => {
     const { requestId } = req.query;
 
@@ -86,3 +91,19 @@ exports.renderPaymentPage = async (req, res) => {
         res.status(500).send('Error while loading payment page');
     }
 };
+// =======
+// exports.renderPaymentPage = (req, res) => {
+//     const paymentContent = {
+//       title: "ParkName",
+//       siteName: "ParkName",
+//       home: "Home",
+//       about: "About",
+//       services: "Services",
+//       contact: "Contact",
+//       login: "Login",
+//       signUp: "Sign Up",
+//       footerText: "2025 Simple starter website"
+//     };
+//     res.render('payment', paymentContent)
+// };
+// >>>>>>> a00cff792bf39b106363139141b717c88b0e716e
