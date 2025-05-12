@@ -18,6 +18,8 @@ async function isAdmin(req, res, next) {
 
 router.get('/user/:userID/requests', isAdmin, AdminController.viewUserParkingRequests);
 
+router.get('/adminDashboard', AdminController.renderAdminPage);
+
 router.post('/approve', isAdmin, AdminController.approveParkingRequest);
 
 router.post('/reject', isAdmin, AdminController.rejectParkingRequest);

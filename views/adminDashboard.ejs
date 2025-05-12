@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta lang="en-GB">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1">
+        <link rel="stylesheet" href="/output.css">
+        <title><%= title || 'Admin Dashboard' %></title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="font-sans bg-gray-50">
+        <!--Navigation Bar-->
+        <nav class="bg-blue-500 text-white p-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-xl"><%= siteName || 'placeholder' %></div>
+            <ul class="flex space-x-6">
+                <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
+                <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
+                <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
+                <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
+                <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
+                <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
+            </ul>   
+            </div>
+        </nav>
+        <!--Admin Dashboard start-->
+        <div class="flex h-screen p-6">
+            <div class="w-1/2 bg-orange-400 p-6 overflow-auto">                 <!--Left Box-->
+                <h1 class="text-white text-xl font-bold">left box</h1>          
+                <p class="text-white">This is the left side</p>
+                <div name="requestBlock" class="grid grid-cols-1 gap-4">
+                    <div class="bg-white p-4 rounded shadow hover:bg-gray-400">Box 1</div>
+                </div>
+                
+            </div>
+            <div class="w-1/25 bg-white-400"></div>                             <!--Seperator between boxes-->
+
+            <div class="w-1/2 bg-orange-400 p-6 overflow-auto relative">        <!--Right Box-->
+                <h1 class="text-white text xl font-bold ">right box</h1>         
+                <p class="text-white">This is the right side</p>
+
+                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded absolute right-0 bottom-0">
+                    REJECT
+                </button>
+                <select name ="RejectReason" class="mx-w-5xs block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline absolute bottom-20 right-10 ">
+                    <option>Parking Space already taken</option>
+                    <option>Invalid Time Slot</option>
+                    <option>Invalid Vehicle for parking space type</option>
+                    <option>Requested a restricted parking space</option>
+                </select>
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-10 px-10 border border-green-700 rounded absolute left-5 bottom-5">
+                    ACCEPT
+                </button>
+        </div>
+    </body>
+</html>

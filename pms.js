@@ -8,6 +8,7 @@ const loginRoutes = require('./routes/loginRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const signupRoutes = require('./routes/signupRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const helpRoutes = require('./routes/helpRoutes');
 
 const connectDB = require('./config/database');
@@ -46,6 +47,7 @@ class PMS {
     this.pms.use(reservationRoutes);
     this.pms.use(signupRoutes);
     this.pms.use(paymentRoutes);
+    this.pms.use(adminRoutes);
     this.pms.use(helpRoutes);
 
     this.pms.listen(this.PORT, () => {
