@@ -8,6 +8,7 @@ const loginRoutes = require('./routes/loginRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const signupRoutes = require('./routes/signupRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const connectDB = require('./config/database');
 dotenv.config(); // Load environment variables from .env
@@ -45,6 +46,7 @@ class PMS {
     this.pms.use(reservationRoutes);
     this.pms.use(signupRoutes);
     this.pms.use(paymentRoutes);
+    this.pms.use(adminRoutes);
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);

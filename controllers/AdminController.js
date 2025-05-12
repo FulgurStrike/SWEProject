@@ -63,7 +63,7 @@ exports.renderAdminPage = (req, res) => {
       contact: "Contact",
       login: "Login",
       signUp: "Sign Up",
-      footerText: "2025 Simple starter website"
+      footerText: "2025 Parkname Management System"
     }
     res.render('adminDashboard', adminContent)
 };
