@@ -1,56 +1,69 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta lang="en-GB">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">
-        <link rel="stylesheet" href="/output.css">
-        <title><%= title || 'Admin Dashboard' %></title>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    <body class="font-sans bg-gray-50">
-        <!--Navigation Bar-->
-        <nav class="bg-blue-500 text-white p-4">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="text-xl"><%= siteName || 'placeholder' %></div>
-            <ul class="flex space-x-6">
-                <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
-                <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
-                <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
-                <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
-                <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
-                <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
-            </ul>   
-            </div>
-        </nav>
-        <!--Admin Dashboard start-->
-        <div class="flex h-screen p-6">
-            <div class="w-1/2 bg-orange-400 p-6 overflow-auto">                 <!--Left Box-->
-                <h1 class="text-white text-xl font-bold">left box</h1>          
-                <p class="text-white">This is the left side</p>
-                <div name="requestBlock" class="grid grid-cols-1 gap-4">
-                    <div class="bg-white p-4 rounded shadow hover:bg-gray-400">Box 1</div>
-                </div>
-                
-            </div>
-            <div class="w-1/25 bg-white-400"></div>                             <!--Seperator between boxes-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/output.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
 
-            <div class="w-1/2 bg-orange-400 p-6 overflow-auto relative">        <!--Right Box-->
-                <h1 class="text-white text xl font-bold ">right box</h1>         
-                <p class="text-white">This is the right side</p>
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="text-xl font-bold">Admin Dashboard</div>
+      <ul class="flex space-x-6">
+        <li><a href="/" class="hover:text-gray-300">Home</a></li>
+        <li><a href="/logout" class="hover:text-gray-300">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
 
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded absolute right-0 bottom-0">
-                    REJECT
-                </button>
-                <select name ="RejectReason" class="mx-w-5xs block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline absolute bottom-20 right-10 ">
-                    <option>Parking Space already taken</option>
-                    <option>Invalid Time Slot</option>
-                    <option>Invalid Vehicle for parking space type</option>
-                    <option>Requested a restricted parking space</option>
-                </select>
-                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-10 px-10 border border-green-700 rounded absolute left-5 bottom-5">
-                    ACCEPT
-                </button>
-        </div>
+     <!-- Main Section -->
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Booking Requests List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+    
+          <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer" onclick="selectRequest(1)">
+            <p><strong>Name:</strong> booking name</p>
+            <p><strong>From:</strong> booking from</p>
+            <p><strong>To:</strong> booking to</p>
+            <p><strong>Vehicle:</strong> booking reg</p>
+          </li>
+        
+      </ul>
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Selected Request</h2>
+      <div id="selectedRequest" class="text-gray-700 space-y-3">
+        <p>Select a request from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/admin/accept" method="POST">
+          <input type="hidden" id="acceptId" name="id" />
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Accept</button>
+        </form>
+        <form action="/admin/reject" method="POST">
+          <input type="hidden" id="rejectId" name="id" />
+          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Reject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+        <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
+            <ul class="space-y-4">
+                <li class="border border-gray-300 p-4 rounded-md">
+                  <p><strong>Email:</strong> message email</p>
+                  <p><strong>Message:</strong> message </p>
+                </li>
+            </ul>
+          </div>
     </body>
 </html>
