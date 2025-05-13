@@ -53,7 +53,10 @@ exports.rejectParkingRequest = async (req, res) => {
         return res.status(500).send(err.message);
     }
 };
-exports.renderAdminPage = (req, res) => {
+
+const Message = require('../models/messages')
+
+exports.renderAdminPage = async (req, res) => {
     const adminContent = {
       title: "ParkName",
       siteName: "ParkName",
@@ -64,7 +67,14 @@ exports.renderAdminPage = (req, res) => {
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 Parkname Management System"
-    }
-    res.render('adminDashboard', adminContent)
-};
+    };
+    try {
+        const messages = await Message.find({});
 
+        console.log('Fetched messages:', messages);
+
+        res.render('adminDashboard', { ...adminContent, messages });
+      } catch (err) {
+        console.error('Failed to fetch messages:', err);
+        res.render('adminDashboard', { ...adminContent, messages: [] });      }
+};
