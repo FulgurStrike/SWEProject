@@ -70,6 +70,8 @@ exports.authenticateToken = (req, res, next) => {
 };
 
 exports.showLoginPage = (req, res) => {
-    res.render('login', loginContent())
+    
+
+    res.render('login', loginContent)
 };
 
