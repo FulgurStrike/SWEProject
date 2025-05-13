@@ -1,5 +1,4 @@
 const Payment = require('../models/payment');
-const ParkingRequest = require('../models/parkingrequest');
 
 const rate_per_hour = 2;
 const rate_per_minute = rate_per_hour / 60;
@@ -64,7 +63,7 @@ exports.renderPaymentPage = async (req, res) => {
         home: "Home",
         about: "About",
         services: "Services",
-        contact: "Contact",
+        contact: "Help",
         login: "Login",
         signUp: "Sign Up",
         footerText: "2025 Simple starter website",

@@ -1,4 +1,3 @@
-const ParkingRequest = require('../models/parkingrequest');
 const DriverUser = require('../models/driveruser');
 
 
@@ -83,7 +82,7 @@ exports.showReservationPage = (req, res) => {
       home: "Home",
       about: "About",
       services: "Services",
-      contact: "Contact",
+      contact: "Help",
       login: "Login",
       signUp: "Sign Up",
       heroHeader: "Welcome to our Website",
