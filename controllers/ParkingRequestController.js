@@ -25,10 +25,6 @@ exports.makeReservation = async (req, res) => {
     driver = await DriverUser.findById(driverID).exec();
     console.log(driver.email);
 
-    // if (!driverID || !arrivalTime || !departureTime) {
-    //     return res.status(400).send('Missing required fields');
-    // }
-
     try {
         const parkingRequest = new ParkingRequest({
             driver: driver,
@@ -37,10 +33,9 @@ exports.makeReservation = async (req, res) => {
         });
         await parkingRequest.save();
 
-        res.redirect(`/payment?requestId=${parkingRequest._id}`);
+        res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
 
-        const requestID = parkingRequest.get("_id");
-        res.cookie("requestID", requestID);  
+        res.redirect(`/payment?requestId=${parkingRequest._id}`);  
 
         //res.render('viewParkingRequests')
     } catch (err) {

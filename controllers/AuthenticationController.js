@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
         
         // Set JWT token into cookie
-        const userID = User.get("_id").toString();
+        const userID = user._id.toString();
         console.log(userID);
         res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
         res.cookie('user_id', userID);
