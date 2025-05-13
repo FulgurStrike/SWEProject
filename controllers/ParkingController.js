@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ParkingLot = require('../models/parkinglot');
 const ParkingSpace = require('../models/parkingspace');
-
+const ParkingRequest = require('../models/parkingrequest');
 // Assign parking space to the request
 router.post('/assign', async (req, res) => {
     const { requestID, spaceID } = req.body;

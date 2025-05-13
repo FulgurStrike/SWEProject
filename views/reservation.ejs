@@ -30,7 +30,13 @@
         <h2 class="text-2xl font-semibold mb-6 text-left">Reserve Your Parking Spot</h2>    
             <div class="mb-4">
                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                <input type="text" id="location" name="location" class="w-full p-3 border border-gray-300 rounded-md" required>
+                <select id="location" name="location" class="w-full p-3 border border-gray-300 rounded-md" required>
+                  <option value="NEW SCI">NEW SCI</option>
+                  <option value="Enterprise Centre">Enterprise Centre</option>
+                  <option value="Queens">Queens</option>
+                  <option value="Zuckerman Blding">Zuckerman Blding</option>
+                  <option value="placeholder">idk</option>
+              </select>
             </div>
             
             <div class="mb-4">
@@ -41,6 +47,7 @@
             <div class="mb-4">
                 <label for="to" class="block text-sm font-medium text-gray-700">To</label>
                 <input type="datetime-local" id="departureTime" name="departureTime" class="w-full p-3 border border-gray-300 rounded-md" required>
+            
             </div>
             
             <div class="mb-4">

@@ -1,4 +1,5 @@
 const Payment = require('../models/payment');
+const ParkingRequest = require('../models/parkingrequest');
 
 const rate_per_hour = 2;
 const rate_per_minute = rate_per_hour / 60;

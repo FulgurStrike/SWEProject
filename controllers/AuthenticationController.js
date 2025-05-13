@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+require('dotenv').config()
+
+if (!process.env.JWT_TOKEN /* or .JWT_SECRET */) {
+    console.error("JWT_TOKEN is not defined in .env");
+    process.exit(1);
+  }
+  
 
 const loginContent = {
     title: "ParkName",
