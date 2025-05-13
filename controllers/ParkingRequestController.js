@@ -12,6 +12,8 @@ exports.makeReservation = async (req, res) => {
     const { location, arrivalTime, departureTime, registration } = req.body;
 
     console.log(location, arrivalTime, departureTime, registration);
+    
+    //console.log(req.body);
 
     console.log(req.cookies)
   
@@ -19,7 +21,6 @@ exports.makeReservation = async (req, res) => {
     driverID = req.cookies.user_id;
     console.log(driverID);
 
-    
 
     driver = await DriverUser.findById(driverID).exec();
     console.log(driver.email);
@@ -32,9 +33,11 @@ exports.makeReservation = async (req, res) => {
         const parkingRequest = new ParkingRequest({
             driver: driver,
             arrivalTime: arrivalTime,
-            departureTime: departureTime,
+            departureTime: departureTime
         });
         await parkingRequest.save();
+
+        res.redirect(`/payment?requestId=${parkingRequest._id}`);
 
         const requestID = parkingRequest.get("_id");
         res.cookie("requestID", requestID);  

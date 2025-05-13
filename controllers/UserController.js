@@ -1,23 +1,25 @@
 const bcrypt = require('bcrypt');
 const DriverUser = require('../models/driveruser');
 
-// Input validation
+/* Input validation
 const validatePassword = (password) => {
     const minLength = 8;
     const hasNumbers = /\d/;
     const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/;
     return password.length >= minLength && hasNumbers.test(password) && hasSpecialChars.test(password);
-} 
+}
+*/ 
 
 // Register Account
 exports.registerUser = async (req, res) => {
 
     const { firstName, lastName, email, password, reg } = req.body;
     
-    // Validate the password format
+    /* Validate the password format
     if (!validatePassword(password)) {
          return res.send('Password does not meet the requirements.');
     }
+    */
 
     try {
 
@@ -38,7 +40,8 @@ exports.registerUser = async (req, res) => {
             reg: reg
         });
         await user.save();
-        return res.send('User registered successfully');
+        
+        res.redirect('/login');
     } catch (err) {
         console.error(err);
         return res.send(err.message);
@@ -48,7 +51,7 @@ exports.registerUser = async (req, res) => {
 // exports.showUserProfile = async (req, res) => {
 //     const { userID } = req.user; // Assuming JWT middleware populates req.user
 //     try {
-//         const user = await User.findById(userID);
+//         const user = await User.findById(userId);
 //         return res.status(200).json(user);
 //     } catch (err) {
 //         return res.status(500).send(err.message);
@@ -56,7 +59,7 @@ exports.registerUser = async (req, res) => {
 // }
 // // Update account details
 // exports.updateUser = async (req, res) => {
-//     const { userID } = req.user; // Assuming JWT middleware populates req.user
+//     const { userId } = req.user; // Assuming JWT middleware populates req.user
 //     const { email } = req.body;
 //
 //     try {

@@ -21,8 +21,8 @@ router.post('/assign', async (req, res) => {
             return res.status(400).send('Parking space is already occupied or reserved');
         }
 
-        parkingRequest.assignedspace = parkingSpace._id;
-        parkingRequest.requeststatus = 'approved';
+        parkingRequest.parkingSpace = parkingSpace._id;
+        parkingRequest.requestStatus = 'approved';
         await parkingRequest.save();
 
         // Update parking space status
