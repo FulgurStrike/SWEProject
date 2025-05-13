@@ -56,14 +56,23 @@
       </div>
     </div>
   </div>
+
+    <!-- Contact Messages Section -->
         <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
             <ul class="space-y-4">
-                <li class="border border-gray-300 p-4 rounded-md">
-                  <p><strong>Email:</strong> message email</p>
-                  <p><strong>Message:</strong> message </p>
-                </li>
-            </ul>
+                <% if (messages.length === 0) { %>
+                    <li class="text-gray-500">No messages found.</li>
+                  <% } else { %>
+                    <% messages.forEach(function(Message) {
+                      if (Message.senderEmail && Message.senderMessage){ %>
+                      <li class="border border-gray-300 p-4 rounded-md">
+                        <p><strong>Email:</strong> <%= Message.senderEmail %></p>
+                        <p><strong>Message:</strong> <%= Message.senderMessage %></p>
+                      </li>
+                    <% }}) %>
+                  <% } %>
+              </ul>
           </div>
     </body>
-</html>
+</html> 
