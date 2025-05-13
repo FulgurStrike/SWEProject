@@ -1,31 +1,19 @@
-const ParkingRequest = require('../models/parkingrequest');
 const Payment = require('../models/payment');
 
 const rate_per_minute = 0.5;
 
 // Make payment
 exports.makePayment = async (req, res) => {
-// <<<<<<< HEAD
-//     const { parkingRequestID } = req.body;
-// =======
-//     const { amount } = req.body;
+    const { amount } = req.body;
 
-//     parkingRequestID = req.cookies.requestID;
-//     console.log(parkingRequestID);
-// >>>>>>> a00cff792bf39b106363139141b717c88b0e716e
+    parkingRequestID = req.cookies.requestID;
+    console.log(parkingRequestID);
 
-    if (!parkingRequestID) {
+    if (!parkingRequestID || !amount) {
         return res.status(400).send('Missing required payment information');
     }
 
     try {
-        //const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver').populate('parkingSpace');
-        /*
-        if (!parkingRequest) {
-            return res.status(400).send('Parking request not found');
-        }
-        */
-
         const arrival = new Date(parkingRequest.arrivalTime);
         const departure = new Date(parkingRequest.departureTime);
         const duration = Math.ceil((departure - arrival) / 60000); // in minutes
@@ -55,55 +43,20 @@ exports.makePayment = async (req, res) => {
 
 
 exports.renderPaymentPage = async (req, res) => {
-    const { requestId } = req.query;
-
-    try {
-        const parkingRequest = await ParkingRequest.findById(requestId);
-        if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
-        }
-
-        const arrival = new Date(parkingRequest.arrivalTime);
-        const departure = new Date(parkingRequest.departureTime);
-        const duration = Math.ceil((departure - arrival) / 60000);
-        const amount = duration * rate_per_minute;
-
-        const paymentContent = {
-            title: "ParkName",
-            siteName: "ParkName",
-            home: "Home",
-            about: "About",
-            services: "Services",
-            contact: "Contact",
-            login: "Login",
-            signUp: "Sign Up",
-            footerText: "2025 Simple starter website",
-            requestId,
-            amount: amount.toFixed(2),
-            duration,
-            arrivalTime: arrival.toLocaleString(),
-            departureTime: departure.toLocaleString()
-          };
-          res.render('payment', paymentContent)
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).send('Error while loading payment page');
-    }
+    const paymentContent = {
+        title: "ParkName",           
+        siteName: "ParkName",
+        home: "Home",
+        about: "About",
+        services: "Services",
+        contact: "Contact",
+        login: "Login",
+        signUp: "Sign Up",
+        footerText: "2025 Simple starter website",
+        amount: amount.toFixed(2),
+        duration,
+        arrivalTime: arrival.toLocaleString(),
+        departureTime: departure.toLocaleString()
+    };
+    res.render('payment', paymentContent)
 };
-// =======
-// exports.renderPaymentPage = (req, res) => {
-//     const paymentContent = {
-//       title: "ParkName",
-//       siteName: "ParkName",
-//       home: "Home",
-//       about: "About",
-//       services: "Services",
-//       contact: "Contact",
-//       login: "Login",
-//       signUp: "Sign Up",
-//       footerText: "2025 Simple starter website"
-//     };
-//     res.render('payment', paymentContent)
-// };
-// >>>>>>> a00cff792bf39b106363139141b717c88b0e716e

@@ -2,13 +2,8 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-<<<<<<< HEAD
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-=======
-const cookieparser = require('cookie-parser');
-
->>>>>>> a00cff792bf39b106363139141b717c88b0e716e
 const loginRoutes = require('./routes/loginRoutes');
 const indexRoutes = require('./routes/reservationRoutes');
 const signupRoutes = require('./routes/signupRoutes');
@@ -30,18 +25,7 @@ class PMS {
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
     this.pms.use(bodyParser.urlencoded({extended: true}));
-<<<<<<< HEAD
     this.pms.use(cookieParser());
-=======
-    this.pms.use(cookieparser());
-
-    // Store the session
-    this.pms.use(cookieSession({
-      name: 'session',
-      keys: [process.env.SESSION_SECRET ||'default_secret_key'], // Use a secret key for signing in the session cookies
-      maxAge: 24 * 60 * 60 * 1000 // Session expiry time 1 day
-    }));
->>>>>>> a00cff792bf39b106363139141b717c88b0e716e
 
     // Passes the login status to the views
     this.pms.use((req, res, next) => {

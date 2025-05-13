@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
-const loginContent = (invalidCredentials = '') => ({
+const loginContent = {
     title: "ParkName",
     siteName: "ParkName",
     home: "Home",
@@ -12,33 +12,31 @@ const loginContent = (invalidCredentials = '') => ({
     login: "Login",
     signUp: "Sign Up",
     footerText: "2025 Simple starter website",
-    invalidCredentials
-});
+    invalidCredentials: ""
+};
   
 // Login to account
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
      if (!email || !password) {
-         return res.render('login', loginContent('email and password required'));
+        return res.send('Username and password required');
      }
 
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.render('login', loginContent('invalid credentials'));
+            loginContent.invalidCredentials = "Wrong username or Password";
+            res.render("login", loginContent);
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.render('login', loginContent('invalid credentials'));
+            loginContent.invalidCredentials = "Wrong Username or Password";
+            res.render("login", loginContent);
         }
         // Create JWT token with user info
-        const token = jwt.sign(
-            { userId: user._id, email: user.email }, 
-            process.env.JWT_TOKEN,
-            { expiresIn: '5h' }
-        );       
+        const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
         
         // Set JWT token into cookie
         const userID = User.get("_id").toString();
@@ -49,7 +47,7 @@ exports.login = async (req, res) => {
         return res.redirect('/');
     } catch (err) {
         console.error(err);
-        return res.render('login', loginContent(err.message));
+        return res.send(err.message);
     }
 };
 
@@ -64,9 +62,9 @@ exports.authenticateToken = (req, res, next) => {
     const token = req.cookies.auth_token;
     if (!token) return res.redirect('/login');
 
-    jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_TOKEN, (err, user) => {
         if (err) return res.sendStatus(403);
-        req.user = decoded;
+        req.user = user;
         next();
     });
 };

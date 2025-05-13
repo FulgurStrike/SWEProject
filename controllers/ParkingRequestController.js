@@ -9,14 +9,11 @@ String.prototype.toObjectId = function() {
 
 // Create parking request
 exports.makeReservation = async (req, res) => {
-    const driverID = req.user.userId;
     const { location, arrivalTime, departureTime, registration } = req.body;
-    console.log(req.body);
-    if(arrivalTime > departureTime){
-        return res.status(400).send("arrival time after depature time");
-    }
 
     console.log(location, arrivalTime, departureTime, registration);
+    
+    //console.log(req.body);
 
     console.log(req.cookies)
   
@@ -34,9 +31,9 @@ exports.makeReservation = async (req, res) => {
 
     try {
         const parkingRequest = new ParkingRequest({
-            driver: driverID,
-            arrivalTime: new Date(arrivalTime),
-            departureTime: new Date(departureTime)
+            driver: driver,
+            arrivalTime: arrivalTime,
+            departureTime: departureTime
         });
         await parkingRequest.save();
 
@@ -53,7 +50,7 @@ exports.makeReservation = async (req, res) => {
 
 // View all parking requests
 exports.viewUserParkingRequests = async (req, res) => {
-    const driverID = req.user.userId;
+    const driverID = req.user._id;
 
     try {
         // Find all requests associated with logged-in user
