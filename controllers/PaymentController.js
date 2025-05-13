@@ -64,7 +64,7 @@ exports.renderPaymentPage = async (req, res) => {
         home: "Home",
         about: "About",
         services: "Services",
-        contact: "Contact",
+        contact: "Help",
         login: "Login",
         signUp: "Sign Up",
         footerText: "2025 Simple starter website",

@@ -1,4 +1,3 @@
-const ParkingRequest = require('../models/parkingrequest');
 
 // View parking requests for a user
 exports.viewUserParkingRequests = async (req, res) => {
@@ -63,7 +62,7 @@ exports.renderAdminPage = async (req, res) => {
       home: "Home",
       about: "About",
       services: "Services",
-      contact: "Contact",
+      contact: "Help",
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 Parkname Management System"
