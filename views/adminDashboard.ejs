@@ -48,15 +48,18 @@
           <% if (requests.length === 0) { %>
             <li class="text-gray-500">No requests found.</li>
           <% } else { %>
-            <% requests.forEach(function(req)  { %>
-              <li class="border border-gray-300 p-4 rounded-md">
+            <% requests.forEach(function(req, index)  { %>
+            <% if (req.requestStatus === 'pending') { %>
+              <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+               onclick="selectRequest(index)">
                 <p><strong>Arrival Time:</strong> <%= req.arrivalTime%></p>
                 <p><strong>Departure Time:</strong> <%= req.departureTime%></p>
                 <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
                 <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
                 <p><strong>Reg:</strong> <%= req.driver.reg%></p>
+                <p><strong>Status:</strong> <%= req.requestStatus %></p>
               </li>
-            <% }) %>
+            <% }}) %>
           <% } %>
         
       </ul>

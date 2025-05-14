@@ -1,22 +1,5 @@
+const ParkingRequest = require('../models/parkingrequest');
 
-// View parking requests for a user
-exports.viewUserParkingRequests = async (req, res) => {
-    const {userID} = req.params;
-
-    try {
-        const parkingRequests = await ParkingRequest.find({driver: userID})
-            .populate('parkingSpace')
-            .populate('driver');
-        if (parkingRequests.length === 0) {
-            req.flash('error', 'No parking requests found for this user');
-            return res.redirect('back');
-        }
-        res.render('adminDashboard/viewUserParkingRequests', {parkingRequests, userID});
-    } catch (error) {
-        req.flash('error', err.message);
-        return res.redirect('back');
-    }
-}
 
 // Approve parking request
 exports.approveParkingRequest = async (req, res) => {
