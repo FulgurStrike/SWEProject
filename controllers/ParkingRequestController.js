@@ -30,8 +30,8 @@ exports.makeReservation = async (req, res) => {
 
     if(arr > dep){
         console.log("timing error : ", arr , " and :", dep)
-        indexContent.errorMessage="arrival time after departure time"
-        res.render('/',indexContent);
+        indexContent.errorMessage = "arrival time after departure time"
+        res.render('reservation', indexContent);
     }
 
     console.log(location, arrivalTime, departureTime, registration);
@@ -59,12 +59,12 @@ exports.makeReservation = async (req, res) => {
 
         res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
 
-        res.redirect(`/payment?requestId=${parkingRequest._id}`);  
+        res.redirect(`/payment`);  
 
         //res.render('viewParkingRequests')
     } catch (err) {
         req.flash('error', err.message);
-            return res.redirect('back');
+        return res.redirect('back');
         
     }
 };
