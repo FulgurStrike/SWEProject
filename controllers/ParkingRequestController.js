@@ -1,6 +1,21 @@
 const DriverUser = require('../models/driveruser');
 const ParkingRequest = require("../models/parkingrequest");
 
+const indexContent = {
+    title: "ParkName",
+    siteName: "ParkName",
+    home: "Home",
+    about: "About",
+    services: "Services",
+    contact: "Help",
+    login: "Login",
+    signUp: "Sign Up",
+    heroHeader: "Welcome to our Website",
+    errorMessage: "",
+    footerText: "2025 Simple starter Website"
+  }
+
+
 String.prototype.toObjectId = function() {
   var ObjectId = (require('mongoose').Types.ObjectId);
   return new ObjectId(this.toString());
@@ -9,6 +24,15 @@ String.prototype.toObjectId = function() {
 // Create parking request
 exports.makeReservation = async (req, res) => {
     const { location, arrivalTime, departureTime, registration } = req.body;
+
+    const arr = new Date(arrivalTime);
+    const dep = new Date(departureTime);
+
+    if(arr > dep){
+        console.log("timing error : ", arr , " and :", dep)
+        indexContent.errorMessage="arrival time after departure time"
+        res.render('/',indexContent);
+    }
 
     console.log(location, arrivalTime, departureTime, registration);
     
@@ -29,6 +53,7 @@ exports.makeReservation = async (req, res) => {
             driver: driver,
             arrivalTime: arrivalTime,
             departureTime: departureTime
+
         });
         await parkingRequest.save();
 
@@ -38,7 +63,9 @@ exports.makeReservation = async (req, res) => {
 
         //res.render('viewParkingRequests')
     } catch (err) {
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+            return res.redirect('back');
+        
     }
 };
 
@@ -53,7 +80,8 @@ exports.viewUserParkingRequests = async (req, res) => {
             .populate('driver');
         res.render('viewParkingRequests', { parkingRequests });
     } catch (error) {
-        return res.status(500).send(error.message);
+        req.flash('error',err.message);
+            return res.redirect('back');
     }
 }
 
@@ -66,29 +94,19 @@ exports.viewParkingRequest = async (req, res) => {
             .populate('parkingSpace')
             .populate('driver');
         if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
 
         res.render('viewParkingRequest', {parkingRequest});
     } catch (err) {
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+            return res.redirect('back');
     }
 };
 
 exports.showReservationPage = (req, res) => {
-    const indexContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Help",
-      login: "Login",
-      signUp: "Sign Up",
-      heroHeader: "Welcome to our Website",
-
-      footerText: "2025 Simple starter Website"
-    }
+    
     res.render('reservation', indexContent);
 };
 

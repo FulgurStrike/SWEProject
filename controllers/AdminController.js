@@ -8,7 +8,8 @@ exports.approveParkingRequest = async (req, res) => {
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver');
         if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
         parkingRequest.requestStatus = 'approved';
         await parkingRequest.save();
