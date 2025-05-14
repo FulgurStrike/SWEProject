@@ -43,12 +43,21 @@
       <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
       <ul class="space-y-4 overflow-y-auto max-h-[400px]">
     
-          <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer" onclick="selectRequest(1)">
-            <p><strong>Name:</strong> booking name</p>
-            <p><strong>From:</strong> booking from</p>
-            <p><strong>To:</strong> booking to</p>
-            <p><strong>Vehicle:</strong> booking reg</p>
-          </li>
+          
+
+          <% if (requests.length === 0) { %>
+            <li class="text-gray-500">No requests found.</li>
+          <% } else { %>
+            <% requests.forEach(function(req)  { %>
+              <li class="border border-gray-300 p-4 rounded-md">
+                <p><strong>Arrival Time:</strong> <%= req.arrivalTime%></p>
+                <p><strong>Departure Time:</strong> <%= req.departureTime%></p>
+                <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
+                <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
+                <p><strong>Reg:</strong> <%= req.driver.reg%></p>
+              </li>
+            <% }) %>
+          <% } %>
         
       </ul>
     </div>
