@@ -18,7 +18,8 @@ exports.makePayment = async (req, res) => {
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID);
         if (!parkingRequestID) {
-            return res.status(400).send('Request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
         const arrival = new Date(parkingRequest.arrivalTime);
         const departure = new Date(parkingRequest.departureTime);
@@ -42,7 +43,8 @@ exports.makePayment = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+            return res.redirect('back');
     }
 };
 
@@ -51,7 +53,8 @@ exports.renderPaymentPage = async (req, res) => {
    const parkingRequestID = req.cookies.requestID;
    const parkingRequest = await ParkingRequest.findById(parkingRequestID);
    if (!parkingRequestID) {
-     return res.status(400).send('Request not found');
+     req.flash('error', 'Parking request not found');
+            return res.redirect('back');
    }
   
    const arrival = new Date(parkingRequest.arrivalTime);
