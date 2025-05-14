@@ -8,11 +8,13 @@ exports.viewUserParkingRequests = async (req, res) => {
             .populate('parkingSpace')
             .populate('driver');
         if (parkingRequests.length === 0) {
-            return res.status(404).send('No parking requests found for this user');
+            req.flash('error', 'No parking requests found for this user');
+            return res.redirect('back');
         }
         res.render('adminDashboard/viewUserParkingRequests', {parkingRequests, userID});
     } catch (error) {
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+        return res.redirect('back');
     }
 }
 
@@ -23,7 +25,8 @@ exports.approveParkingRequest = async (req, res) => {
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver');
         if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
         parkingRequest.requestStatus = 'approved';
         await parkingRequest.save();
