@@ -42,27 +42,33 @@
     <div class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
       <ul class="space-y-4 overflow-y-auto max-h-[400px]">
-    
-          
-
-          <% if (requests.length === 0) { %>
-            <li class="text-gray-500">No requests found.</li>
-          <% } else { %>
-            <% requests.forEach(function(req, index)  { %>
+        <% if (requests.length === 0) { %>
+          <li class="text-gray-500">No requests found.</li>
+        <% } else { %>
+          <% requests.forEach(function(req, i) { %>
             <% if (req.requestStatus === 'pending') { %>
-              <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
-               onclick="selectRequest(index)">
-                <p><strong>Arrival Time:</strong> <%= req.arrivalTime%></p>
-                <p><strong>Departure Time:</strong> <%= req.departureTime%></p>
+              <li
+                class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+                data-id="<%= req._id %>"
+                data-arrival="<%= req.arrivalTime %>"
+                data-departure="<%= req.departureTime %>"
+                data-first="<%= req.driver.firstName %>"
+                data-last="<%= req.driver.lastName %>"
+                data-reg="<%= req.driver.reg %>"
+                onclick="selectRequest(this)"
+              >
+                <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
+                <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
                 <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
                 <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
-                <p><strong>Reg:</strong> <%= req.driver.reg%></p>
+                <p><strong>Reg:</strong> <%= req.driver.reg %></p>
                 <p><strong>Status:</strong> <%= req.requestStatus %></p>
               </li>
-            <% }}) %>
-          <% } %>
-        
+            <% } %>
+          <% }); %>
+        <% } %>
       </ul>
+      
     </div>
 
     <!-- Right: Selected Booking Details -->
@@ -101,5 +107,29 @@
                   <% } %>
               </ul>
           </div>
+          <script>
+            function selectRequest(el) {
+              const id        = el.dataset.id;
+              const arrival   = el.dataset.arrival;
+              const departure = el.dataset.departure;
+              const first     = el.dataset.first;
+              const last      = el.dataset.last;
+              const reg       = el.dataset.reg;
+          
+              document.getElementById('acceptId').value = id;
+              document.getElementById('rejectId').value = id;
+          
+              document.getElementById('selectedRequest').innerHTML = `
+                <p><strong>Arrival Time:</strong> ${arrival}</p>
+                <p><strong>Departure Time:</strong> ${departure}</p>
+                <p><strong>First Name:</strong> ${first}</p>
+                <p><strong>Last Name:</strong> ${last}</p>
+                <p><strong>Reg:</strong> ${reg}</p>
+                <p><strong>Status:</strong> pending</p>
+              `;
+            }
+          </script>
+          
+          
     </body>
 </html> 
