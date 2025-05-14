@@ -8,7 +8,7 @@ const parkingLotSchema = new Schema({
     availableSpaces: {type: Number, default: 0 }
 });
 
-parkingLotSchema.virtual('availableSpaces').get(function() {
+parkingLotSchema.virtual('available_spaces').get(function() {
     return this.parkingSpaces.filter(space => !space.isOccupied && !space.isReserved);
 });
 
