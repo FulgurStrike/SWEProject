@@ -16,7 +16,6 @@ async function isAdmin(req, res, next) {
     }
 }
 
-router.get('/user/:userID/requests', isAdmin, AdminController.viewUserParkingRequests);
 
 router.get('/adminDashboard', AdminController.renderAdminPage);
 
