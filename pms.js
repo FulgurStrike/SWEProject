@@ -10,6 +10,13 @@ const signupRoutes = require('./routes/signupRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const helpRoutes = require('./routes/helpRoutes');
+const session = require('express-session')
+const flash = require('connect-flash')
+
+
+
+
+
 
 const connectDB = require('./config/database');
 dotenv.config(); // Load environment variables from .env
@@ -22,6 +29,21 @@ class PMS {
   }
 
   async startServer() {
+
+    this.pms.use(session({
+      secret: process.env.SESSION_SECRET || 'this is just a louis flash test lel',
+      resave: false,
+      saveUninitialized: false
+    }));
+
+    this.pms.use(flash());
+
+    this.pms.use((req, res, next) => {
+      res.locals.errorMessages   = req.flash('error') || [];
+      res.locals.successMessages = req.flash('success') || [];
+      next();
+    });
+
     this.pms.set('view engine', 'ejs');
     this.pms.use(express.static(path.join(__dirname, 'public')));
     this.pms.use(bodyParser.urlencoded({extended: true}));

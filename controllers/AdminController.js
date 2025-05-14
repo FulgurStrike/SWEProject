@@ -1,21 +1,5 @@
 const ParkingRequest = require('../models/parkingrequest');
 
-// View parking requests for a user
-exports.viewUserParkingRequests = async (req, res) => {
-    const {userID} = req.params;
-
-    try {
-        const parkingRequests = await ParkingRequest.find({driver: userID})
-            .populate('parkingSpace')
-            .populate('driver');
-        if (parkingRequests.length === 0) {
-            return res.status(404).send('No parking requests found for this user');
-        }
-        res.render('adminDashboard/viewUserParkingRequests', {parkingRequests, userID});
-    } catch (error) {
-        return res.status(500).send(err.message);
-    }
-}
 
 // Approve parking request
 exports.approveParkingRequest = async (req, res) => {
@@ -24,7 +8,8 @@ exports.approveParkingRequest = async (req, res) => {
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver');
         if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
         parkingRequest.requestStatus = 'approved';
         await parkingRequest.save();
@@ -54,7 +39,8 @@ exports.rejectParkingRequest = async (req, res) => {
     }
 };
 
-const Message = require('../models/messages')
+const Message = require('../models/messages');
+
 
 exports.renderAdminPage = async (req, res) => {
     const adminContent = {
@@ -63,18 +49,19 @@ exports.renderAdminPage = async (req, res) => {
       home: "Home",
       about: "About",
       services: "Services",
-      contact: "Contact",
+      contact: "Help",
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 Parkname Management System"
     };
     try {
         const messages = await Message.find({});
+        const requests = await ParkingRequest.find({})
+            .populate('parkingSpace')
+            .populate('driver');
 
-        console.log('Fetched messages:', messages);
-
-        res.render('adminDashboard', { ...adminContent, messages });
+        res.render('adminDashboard', { ...adminContent, messages, requests });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('adminDashboard', { ...adminContent, messages: [] });      }
+        res.render('adminDashboard', { ...adminContent, messages: [], requests: [] });      }
 };

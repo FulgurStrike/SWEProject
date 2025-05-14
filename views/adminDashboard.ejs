@@ -8,6 +8,21 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+  <% if (errorMessages.length) { %>
+    <% errorMessages.forEach(msg => { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
+  
+  <% if (successMessages.length) { %>
+    <% successMessages.forEach(msg => { %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
 
   <!-- Navbar -->
   <nav class="bg-blue-600 text-white p-4">
@@ -27,15 +42,33 @@
     <div class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
       <ul class="space-y-4 overflow-y-auto max-h-[400px]">
-    
-          <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer" onclick="selectRequest(1)">
-            <p><strong>Name:</strong> booking name</p>
-            <p><strong>From:</strong> booking from</p>
-            <p><strong>To:</strong> booking to</p>
-            <p><strong>Vehicle:</strong> booking reg</p>
-          </li>
-        
+        <% if (requests.length === 0) { %>
+          <li class="text-gray-500">No requests found.</li>
+        <% } else { %>
+          <% requests.forEach(function(req, i) { %>
+            <% if (req.requestStatus === 'pending') { %>
+              <li
+                class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+                data-id="<%= req._id %>"
+                data-arrival="<%= req.arrivalTime %>"
+                data-departure="<%= req.departureTime %>"
+                data-first="<%= req.driver.firstName %>"
+                data-last="<%= req.driver.lastName %>"
+                data-reg="<%= req.driver.reg %>"
+                onclick="selectRequest(this)"
+              >
+                <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
+                <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
+                <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
+                <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
+                <p><strong>Reg:</strong> <%= req.driver.reg %></p>
+                <p><strong>Status:</strong> <%= req.requestStatus %></p>
+              </li>
+            <% } %>
+          <% }); %>
+        <% } %>
       </ul>
+      
     </div>
 
     <!-- Right: Selected Booking Details -->
@@ -74,5 +107,29 @@
                   <% } %>
               </ul>
           </div>
+          <script>
+            function selectRequest(el) {
+              const id        = el.dataset.id;
+              const arrival   = el.dataset.arrival;
+              const departure = el.dataset.departure;
+              const first     = el.dataset.first;
+              const last      = el.dataset.last;
+              const reg       = el.dataset.reg;
+          
+              document.getElementById('acceptId').value = id;
+              document.getElementById('rejectId').value = id;
+          
+              document.getElementById('selectedRequest').innerHTML = `
+                <p><strong>Arrival Time:</strong> ${arrival}</p>
+                <p><strong>Departure Time:</strong> ${departure}</p>
+                <p><strong>First Name:</strong> ${first}</p>
+                <p><strong>Last Name:</strong> ${last}</p>
+                <p><strong>Reg:</strong> ${reg}</p>
+                <p><strong>Status:</strong> pending</p>
+              `;
+            }
+          </script>
+          
+          
     </body>
 </html> 
