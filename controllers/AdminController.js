@@ -3,7 +3,7 @@ const ParkingRequest = require('../models/parkingrequest');
 
 // Approve parking request
 exports.approveParkingRequest = async (req, res) => {
-    const { parkingRequestID } = req.body;
+    const parkingRequestID = req.body.id;
 
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID).populate('driver');
@@ -12,9 +12,11 @@ exports.approveParkingRequest = async (req, res) => {
             return res.redirect('back');
         }
         parkingRequest.requestStatus = 'approved';
-        await parkingRequest.save();
+        await parkingRequest.save();  
 
-        return res.status(200).send('Parking request approved');
+        req.flash('message', 'Parking request approved');
+        return res.redirect('back');
+
     } catch (err) {
         return res.status(500).send(err.message);
     }
@@ -22,7 +24,7 @@ exports.approveParkingRequest = async (req, res) => {
 
 // Reject parking request
 exports.rejectParkingRequest = async (req, res) => {
-    const { parkingRequestID } = req.body;
+    const parkingRequestID = req.body.id;
 
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID);
@@ -33,7 +35,9 @@ exports.rejectParkingRequest = async (req, res) => {
         parkingRequest.requestStatus = 'rejected';
         await parkingRequest.save();
 
-        return res.status(200).send('Parking request rejected');
+        req.flash('message', 'Parking request rejected');
+        return res.redirect('back');
+
     } catch (err) {
         return res.status(500).send(err.message);
     }

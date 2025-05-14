@@ -78,11 +78,11 @@
         <p>Select a request from the left to view details.</p>
       </div>
       <div class="mt-6 flex space-x-4">
-        <form action="/admin/accept" method="POST">
+        <form action="/adminDashboard/accept" method="POST">
           <input type="hidden" id="acceptId" name="id" />
           <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Accept</button>
         </form>
-        <form action="/admin/reject" method="POST">
+        <form action="/adminDashboard/reject" method="POST">
           <input type="hidden" id="rejectId" name="id" />
           <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Reject</button>
         </form>
@@ -116,8 +116,11 @@
               const last      = el.dataset.last;
               const reg       = el.dataset.reg;
           
-              document.getElementById('acceptId').value = id;
-              document.getElementById('rejectId').value = id;
+              acceptID = document.getElementById('acceptId')
+              acceptID.setAttribute("value", id);
+              
+              rejectID = document.getElementById('rejectId');
+              rejectID.setAttribute("value", id);
           
               document.getElementById('selectedRequest').innerHTML = `
                 <p><strong>Arrival Time:</strong> ${arrival}</p>
