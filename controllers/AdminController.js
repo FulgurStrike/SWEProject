@@ -53,7 +53,8 @@ exports.rejectParkingRequest = async (req, res) => {
     }
 };
 
-const Message = require('../models/messages')
+const Message = require('../models/messages');
+
 
 exports.renderAdminPage = async (req, res) => {
     const adminContent = {
@@ -69,11 +70,12 @@ exports.renderAdminPage = async (req, res) => {
     };
     try {
         const messages = await Message.find({});
+        const requests = await ParkingRequest.find({})
+            .populate('parkingSpace')
+            .populate('driver');
 
-        console.log('Fetched messages:', messages);
-
-        res.render('adminDashboard', { ...adminContent, messages });
+        res.render('adminDashboard', { ...adminContent, messages, requests });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('adminDashboard', { ...adminContent, messages: [] });      }
+        res.render('adminDashboard', { ...adminContent, messages: [], requests: [] });      }
 };
