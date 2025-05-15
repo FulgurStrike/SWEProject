@@ -16,6 +16,9 @@ async function isAdmin(req, res, next) {
     }
 }
 
+router.get('/adminDashboard/login', AdminController.renderAdminLogin);
+
+router.post('/adminDashboard/login', AdminController.adminLogin);
 
 router.get('/adminDashboard', AdminController.renderAdminPage);
 

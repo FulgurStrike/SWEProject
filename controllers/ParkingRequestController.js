@@ -29,30 +29,31 @@ exports.makeReservation = async (req, res) => {
     const dep = new Date(departureTime);
 
     if(arr > dep){
-        console.log("timing error : ", arr , " and :", dep)
-        indexContent.errorMessage = "arrival time after departure time"
+        console.log("timing error : ", arr , " and :", dep);
+        indexContent.errorMessage = "Arrival time after departure time."
         res.render('reservation', indexContent);
-    }
+        indexContent.errorMessage = "";
+    } else {
 
-    console.log(location, arrivalTime, departureTime, registration);
-    
-    //console.log(req.body);
+      console.log(location, arrivalTime, departureTime, registration);
 
-    console.log(req.cookies)
-  
+      //console.log(req.body);
 
-    driverID = req.cookies.user_id;
-    console.log(driverID);
+      console.log(req.cookies)
 
 
-    driver = await DriverUser.findById(driverID).exec();
-    console.log(driver.email);
+      driverID = req.cookies.user_id;
+      console.log(driverID);
 
-    try {
+
+      driver = await DriverUser.findById(driverID).exec();
+      console.log(driver.email);
+
+      try {
         const parkingRequest = new ParkingRequest({
-            driver: driver,
-            arrivalTime: arrivalTime,
-            departureTime: departureTime
+          driver: driver,
+          arrivalTime: arrivalTime,
+          departureTime: departureTime
 
         });
         await parkingRequest.save();
@@ -62,12 +63,13 @@ exports.makeReservation = async (req, res) => {
         res.redirect(`/payment`);  
 
         //res.render('viewParkingRequests')
-    } catch (err) {
+      } catch (err) {
         req.flash('error', err.message);
         return res.redirect('back');
-        
+
+      }
     }
-};
+}
 
 // View all parking requests
 exports.viewUserParkingRequests = async (req, res) => {
