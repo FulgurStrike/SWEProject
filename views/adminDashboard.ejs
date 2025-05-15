@@ -52,6 +52,7 @@
                 data-id="<%= req._id %>"
                 data-arrival="<%= req.arrivalTime %>"
                 data-departure="<%= req.departureTime %>"
+                data-parkinglot="<%= req.parkingLot.lotName %>"
                 data-first="<%= req.driver.firstName %>"
                 data-last="<%= req.driver.lastName %>"
                 data-reg="<%= req.driver.reg %>"
@@ -59,6 +60,7 @@
               >
                 <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
                 <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
+                <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
                 <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
                 <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
                 <p><strong>Reg:</strong> <%= req.driver.reg %></p>
@@ -113,6 +115,7 @@
               const arrival   = el.dataset.arrival;
               const departure = el.dataset.departure;
               const first     = el.dataset.first;
+              const parkinglot = el.dataset.parkinglot;
               const last      = el.dataset.last;
               const reg       = el.dataset.reg;
           

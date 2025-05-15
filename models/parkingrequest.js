@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const parkingRequestSchema = new Schema({
     driver: { type: mongoose.Schema.Types.ObjectId, ref: 'DriverUser', required: true },
-    parkingSpace: {type: mongoose.Schema.Types.ObjectId, ref: 'ParkingSpace'},
+    parkingLot: {type: mongoose.Schema.Types.ObjectId, ref: 'ParkingLot', required: true},
     arrivalTime: { type: Date, required: true },
     departureTime: { type: Date, required: true },
     requestStatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }

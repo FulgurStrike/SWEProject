@@ -1,5 +1,6 @@
 const ParkingRequest = require('../models/parkingrequest');
 const User = require('../models/user');
+const ParkingLot = require('../models/parkinglot');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
@@ -14,6 +15,12 @@ exports.approveParkingRequest = async (req, res) => {
             req.flash('error', 'Parking request not found');
             return res.redirect('back');
         }
+
+
+        const parkingLot = await ParkingLot.findById(parkingRequest.parkingLot._id.toString());
+        parkingLot.availableSpaces -= 1;
+        await parkingLot.save();
+
         parkingRequest.requestStatus = 'approved';
         await parkingRequest.save();  
 
@@ -125,8 +132,8 @@ exports.renderAdminPage = async (req, res) => {
       try {
         const messages = await Message.find({});
         const requests = await ParkingRequest.find({})
-          .populate('parkingSpace')
-          .populate('driver');
+          .populate('driver')
+          .populate('parkingLot');
 
         res.render('adminDashboard', { ...adminContent, messages, requests });
       } catch (err) {
