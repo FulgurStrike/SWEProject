@@ -13,11 +13,10 @@ const loginContent = {
     title: "ParkName",
     siteName: "ParkName",
     home: "Home",
-    about: "About",
-    services: "Services",
-    contact: "Help",
+    help: "Help",
     login: "Login",
     signUp: "Sign Up",
+    logout: "Logout",
     footerText: "2025 Simple starter website",
     invalidCredentials: ""
 };
@@ -32,11 +31,11 @@ exports.login = async (req, res) => {
 
     try {
         const user = await User.findOne({ email });
-        if (!user) {
+        console.log(user);
+        if (user === null) {
             loginContent.invalidCredentials = "Wrong username or Password";
             res.render("login", loginContent);
-        }
-
+        }else{
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             loginContent.invalidCredentials = "Wrong Username or Password";
@@ -52,6 +51,7 @@ exports.login = async (req, res) => {
         res.cookie('user_id', userID);
 
         return res.redirect('/');
+    }
     } catch (err) {
         console.error(err);
         return res.send(err.message);

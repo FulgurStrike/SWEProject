@@ -62,14 +62,13 @@ exports.renderPaymentPage = async (req, res) => {
    const { duration, amount } = calculatePayment(arrival, departure);
 
     const paymentContent = {
-        title: "ParkName",           
+        title: "ParkName",
         siteName: "ParkName",
         home: "Home",
-        about: "About",
-        services: "Services",
-        contact: "Help",
+        help: "Help",
         login: "Login",
         signUp: "Sign Up",
+        logout: "Logout",
         footerText: "2025 Simple starter website",
         amount: amount.toFixed(2),
         duration,

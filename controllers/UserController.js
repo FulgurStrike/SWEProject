@@ -5,11 +5,10 @@ const signupContent = {
     title: "ParkName",
     siteName: "ParkName",
     home: "Home",
-    about: "About",
-    services: "Services",
-    contact: "Help",
+    help: "Help",
     login: "Login",
     signUp: "Sign Up",
+    logout: "Logout",
     footerText: "2025 Simple starter website",
     errorMessage: "",
     formData:{}
