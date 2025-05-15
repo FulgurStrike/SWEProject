@@ -1,5 +1,6 @@
 const DriverUser = require('../models/driveruser');
 const ParkingRequest = require("../models/parkingrequest");
+const ParkingLot = require("../models/parkinglot");
 
 const indexContent = {
     title: "ParkName",
@@ -23,7 +24,7 @@ String.prototype.toObjectId = function() {
 
 // Create parking request
 exports.makeReservation = async (req, res) => {
-    const { location, arrivalTime, departureTime, registration } = req.body;
+    const { parkingLotName, arrivalTime, departureTime, registration } = req.body;
 
     const arr = new Date(arrivalTime);
     const dep = new Date(departureTime);
@@ -35,7 +36,7 @@ exports.makeReservation = async (req, res) => {
         indexContent.errorMessage = "";
     } else {
 
-      console.log(location, arrivalTime, departureTime, registration);
+      console.log(parkingLotName, arrivalTime, departureTime, registration);
 
       //console.log(req.body);
 
@@ -45,6 +46,7 @@ exports.makeReservation = async (req, res) => {
       driverID = req.cookies.user_id;
       console.log(driverID);
 
+      parkingLot = await ParkingLot.findOne({ parkingLotName });
 
       driver = await DriverUser.findById(driverID).exec();
       console.log(driver.email);
@@ -52,6 +54,7 @@ exports.makeReservation = async (req, res) => {
       try {
         const parkingRequest = new ParkingRequest({
           driver: driver,
+          parkingLot: parkingLot,
           arrivalTime: arrivalTime,
           departureTime: departureTime
 
