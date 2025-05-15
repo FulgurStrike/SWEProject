@@ -1,5 +1,8 @@
 const ParkingRequest = require('../models/parkingrequest');
-
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 // Approve parking request
 exports.approveParkingRequest = async (req, res) => {
@@ -45,9 +48,7 @@ exports.rejectParkingRequest = async (req, res) => {
 
 const Message = require('../models/messages');
 
-
-exports.renderAdminPage = async (req, res) => {
-    const adminContent = {
+const loginContent = {
       title: "ParkName",
       siteName: "ParkName",
       home: "Home",
@@ -56,16 +57,82 @@ exports.renderAdminPage = async (req, res) => {
       contact: "Help",
       login: "Login",
       signUp: "Sign Up",
-      footerText: "2025 Parkname Management System"
+      footerText: "2025 Simple starter website",
+      invalidCredentials: ""
     };
+
+exports.renderAdminLogin = (req, res) => {   
+    res.render('adminlogin', loginContent);
+};
+
+
+
+exports.adminLogin = async (req, res) => {
+    const { email, password } = req.body;
+
+     if (!email || !password) {
+        return res.send('Username and password required');
+     }
+
     try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            loginContent.invalidCredentials = "Wrong username or Password";
+            res.render("adminlogin", loginContent);
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            loginContent.invalidCredentials = "Wrong Username or Password";
+            res.render("adminLogin", loginContent);
+        }
+        // Create JWT token with user info
+        const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
+        
+        // Set JWT token into cookie
+        const userID = user._id.toString();
+        console.log(userID);
+        res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        res.cookie('user_id', userID);
+
+        return res.redirect('/adminDashboard');
+    } catch (err) {
+        console.error(err);
+        return res.send(err.message);
+    }
+};
+
+
+exports.renderAdminPage = async (req, res) => {
+
+    const userID = req.cookies.user_id;
+    const user = await User.findById(userID).exec();
+
+    if (user === null || user.__t != "AdminUser") {
+      res.redirect("/adminDashboard/login");
+    } else {
+      const adminContent = {
+        title: "ParkName",
+        siteName: "ParkName",
+        home: "Home",
+        about: "About",
+        services: "Services",
+        contact: "Help",
+        login: "Login",
+        signUp: "Sign Up",
+        footerText: "2025 Parkname Management System"
+      };
+      try {
         const messages = await Message.find({});
         const requests = await ParkingRequest.find({})
-            .populate('parkingSpace')
-            .populate('driver');
+          .populate('parkingSpace')
+          .populate('driver');
 
         res.render('adminDashboard', { ...adminContent, messages, requests });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('adminDashboard', { ...adminContent, messages: [], requests: [] });      }
+        res.render('adminDashboard', { ...adminContent, messages: [], requests: [] });      
+      }
+    }
+
 };
