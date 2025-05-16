@@ -65,7 +65,12 @@ const loginContent = {
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 UEA Software Engineering Group 111",
-      invalidCredentials: ""
+      invalidCredentials: "",
+      adminLogIn: "Admin Login",
+      email: "Email Address",
+      password: "Password",
+      register: "Register",
+      dontHaveAccount: "Don't have an account?"
     };
 
 exports.renderAdminLogin = (req, res) => {   
@@ -155,11 +160,6 @@ exports.renderAdminPage = async (req, res) => {
         logout:"logout",
         signUp: "Sign Up",
         footerText: "2025 UEA Software Engineering Group 111",
-        adminLogIn: "Admin Login",
-        email: "Email Address",
-        password: "Password",
-        register: "Register",
-        dontHaveAccount: "Don't have an account?",
       };
       try {
         const messages = await Message.find({});
