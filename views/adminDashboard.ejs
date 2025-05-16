@@ -92,6 +92,49 @@
     </div>
   </div>
 
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Parking Lot List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Parking Lots</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (parkingLots.length === 0) { %>
+          <li class="text-gray-500">No lots found.</li>
+        <% } else { %>
+          <% parkingLots.forEach(function(req, i) { %>
+          <li
+              class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+              data-id="<%= req._id %>"
+              data-lotname="<%= req.lotName %>"
+              data-capacity="<%= req.capacity %>"
+              data-availablespaces="<%= req.availableSpaces %>"
+              onclick="selectParkingLot(this, requests)"
+            >
+              <p><strong>Lot Name:</strong> <%= req.lotName %></p>
+              <p><strong>Capacity:</strong> <%= req.capacity %></p>
+              <p><strong>Available Spaces:</strong> <%= req.availableSpaces %></p>
+          </li>
+          <% }); %> 
+          <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Spaces Occupied</h2>
+      <div id="selectedParkingLot" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+        <p>Select a parking lot from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/adminDashboard/freeSpace" method="POST">
+          <input type="hidden" id="approvedRequestId" name="id" />
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Free Space</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
     <!-- Contact Messages Section -->
         <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
@@ -131,11 +174,70 @@
                 <p><strong>First Name:</strong> ${first}</p>
                 <p><strong>Last Name:</strong> ${last}</p>
                 <p><strong>Reg:</strong> ${reg}</p>
-                <p><strong>Status:</strong> pending</p>
-              `;
+                <p><strong>Status:</strong> pending</p>`;
+            }
+
+          </script>
+          <script>
+            const requests = <%- JSON.stringify(requests) %>;
+          </script>
+          <script>
+            function selectParkingLot(el, requests) {
+
+              
+              const id = el.dataset.id;
+              requestsInLot = [];
+
+
+
+              requests.forEach(function (req) {
+                if (req.parkingLot._id === id) {
+                  if (req.requestStatus == "approved") {
+                    requestsInLot.push(req);
+                  }
+                }
+              });
+
+              selectedLot = document.getElementById('selectedParkingLot')
+
+              selectedLot.innerHTML = '';
+
+              if (requestsInLot.length === 0) {
+                selectedLot.innerHTML = `<p>No approved bookings for this lot.</p>`;
+              } else {
+                requestsInLot.forEach(req => {
+                  const item = document.createElement("li");
+                  item.className = "border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer";
+                  item.setAttribute("data-id", req._id);
+                  item.setAttribute("data-arrival", req.arrivalTime);
+                  item.setAttribute("data-departure", req.departureTime);
+                  item.setAttribute("data-parkinglot", req.parkingLot.lotName);
+                  item.setAttribute("data-first", req.driver.firstName);
+                  item.setAttribute("data-last", req.driver.lastName);
+                  item.setAttribute("data-reg", req.driver.reg);
+                  item.onclick = function () {
+                    selectApprovedRequest(this);  // Reuse the same selection logic
+                  };
+
+                  item.innerHTML = 
+                  `<p><strong>Driver Name:</strong> ${req.driver.firstName} ${req.driver.lastName}</p>
+                  <p><strong>Arrival Time:</strong> ${req.arrivalTime}</p>
+                  <p><strong>Departure Time:</strong> ${req.departureTime}</p>`;
+                  selectedLot.appendChild(item);
+                });
+              }
+
+            }
+
+            
+          </script>
+          <script>
+            function selectApprovedRequest(el) {
+              const id = el.dataset.id;
+
+              rejectID = document.getElementById('approvedRequestId');
+              rejectID.setAttribute("value", id);
             }
           </script>
-          
-          
     </body>
 </html> 

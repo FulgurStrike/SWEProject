@@ -26,4 +26,6 @@ router.post('/adminDashboard/accept', AdminController.approveParkingRequest);
 
 router.post('/adminDashboard/reject', AdminController.rejectParkingRequest);
 
+router.post('/adminDashboard/freeSpace', AdminController.freeSpace);
+
 module.exports = router;

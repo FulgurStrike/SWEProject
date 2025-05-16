@@ -38,18 +38,12 @@ exports.makeReservation = async (req, res) => {
 
       console.log(parkingLotName, arrivalTime, departureTime, registration);
 
-      //console.log(req.body);
-
-      console.log(req.cookies)
-
 
       driverID = req.cookies.user_id;
-      console.log(driverID);
 
-      parkingLot = await ParkingLot.findOne({ parkingLotName });
+      parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
 
       driver = await DriverUser.findById(driverID).exec();
-      console.log(driver.email);
 
       try {
         const parkingRequest = new ParkingRequest({
