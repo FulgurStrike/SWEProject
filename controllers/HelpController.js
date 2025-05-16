@@ -26,6 +26,7 @@ const helpContent = (submitMessage ='') => ({
     answerThree: "No, the system will record your number plate.",
     contactUs: "Contact Us",
     email: "Email",
+    subject: "Subject",
     message: "Message",
     sendMessage: "Send Message",
     FAQ: "FAQ",
@@ -35,10 +36,11 @@ const helpContent = (submitMessage ='') => ({
 
 exports.submitContactForm = async (req, res) => {
     try{
-    const { email, message } = req.body;
+    const { email, subject, message } = req.body;
     const newMessage = new Message({
         senderEmail: email,
-        senderMessage: message
+        senderMessage: message,
+        senderSubject: subject
         });
     await newMessage.save();
     } catch (error) {
