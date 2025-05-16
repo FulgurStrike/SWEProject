@@ -187,23 +187,55 @@
     </div>
   </div>
 
-    <!-- Contact Messages Section -->
-        <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
-            <ul class="space-y-4">
-                <% if (messages.length === 0) { %>
-                    <li class="text-gray-500">No messages found.</li>
-                  <% } else { %>
-                    <% messages.forEach(function(Message) {
-                      if (Message.senderEmail && Message.senderMessage){ %>
-                      <li class="border border-gray-300 p-4 rounded-md">
-                        <p><strong>Email:</strong> <%= Message.senderEmail %></p>
-                        <p><strong>Message:</strong> <%= Message.senderMessage %></p>
-                      </li>
-                    <% }}) %>
-                  <% } %>
-              </ul>
-          </div>
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Driver List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Messages</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (messages.length === 0) { %>
+          <li class="text-gray-500">No drivers found.</li>
+        <% } else { %>
+          <% messages.forEach(function(req, i) { %>
+            <% if (req.__t != "AdminMessage") { %>
+            <li
+                class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+                data-id="<%= req._id %>"
+                data-email="<%= req.senderEmail %>"
+                data-subject="<%= req.senderSubject %>"
+                data-message="<%= req.senderMessage %>"
+                onclick="selectMessage(this)"
+                >
+                <p><strong>Email:</strong> <%= req.senderEmail %></p>
+                <p><strong>Subject:</strong> <%= req.senderSubject %></p>
+            </li>
+            <% } %>  
+          <% }); %> 
+          <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Message</h2>
+      <div id="selectedMessage" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+        <p>Select a Message from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+      <form action="/adminDashboard/sendMessage" method="POST">
+        <label for="subject" class="block text-sm font-medium text-gray-700"><%=subject%></label>
+        <input type="text" id="subject" name="subject" class="w-full p-3 border border-gray-300 rounded-md" required>
+        <label for="message" class="block text-sm font-medium text-gray-700"><%=message%></label>
+        <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-md" required></textarea>
+        <input type="hidden", id="messageId" name="messageId" > 
+        <input type="hidden" id="sendMessage" name="recipientEmail" />
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
           <script>
             function selectRequest(el) {
               const id        = el.dataset.id;
@@ -303,6 +335,29 @@
                 <p><strong>First Name:</strong> ${firstName}</p>
                 <p><strong>Last Name:</strong> ${lastName}</p>
                 <p><strong>Email Address:</strong> ${email}</p>`;
+            }
+
+          </script>
+          <script>
+            function selectMessage(el) {
+              const id        = el.dataset.id;
+              const email   = el.dataset.email;
+              const subject = el.dataset.subject;
+              const message     = el.dataset.message;
+          
+              acceptID = document.getElementById('sendMessage');
+              acceptID.setAttribute("value", email);
+
+              messageID = document.getElementById('messageId');
+              messageID.setAttribute("value", id);
+
+              subjectField = document.getElementById('subject');
+              subjectField.setAttribute("value", `re: ${subject}`);
+          
+              document.getElementById('selectedMessage').innerHTML = `
+                <p><strong>Sender Email:</strong> ${email}</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Message:</strong> ${message}</p>`;
             }
 
           </script>

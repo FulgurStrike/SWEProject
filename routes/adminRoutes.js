@@ -30,4 +30,6 @@ router.post('/adminDashboard/freeSpace', AdminController.freeSpace);
 
 router.post('/adminDashboard/banUser', AdminController.banUser);
 
+router.post('/adminDashboard/sendMessage', AdminController.sendMessage);
+
 module.exports = router;
