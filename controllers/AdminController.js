@@ -60,9 +60,7 @@ const loginContent = {
       title: "ParkName",
       siteName: "ParkName",
       home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Help",
+      help: "Help",
       login: "Login",
       signUp: "Sign Up",
       footerText: "2025 UEA Software Engineering Group 111",
@@ -151,10 +149,15 @@ exports.renderAdminPage = async (req, res) => {
         home: "Home",
         about: "About",
         services: "Services",
-        contact: "Help",
+        help: "Help",
         login: "Login",
         signUp: "Sign Up",
-        footerText: "2025 Parkname Management System"
+        footerText: "2025 UEA Software Engineering Group 111",
+        adminLogIn: "Admin Login",
+        email: "Email Address",
+        password: "Password",
+        register: "Register",
+        dontHaveAccount: "Don't have an account?",
       };
       try {
         const messages = await Message.find({});
