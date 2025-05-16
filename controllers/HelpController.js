@@ -24,6 +24,11 @@ const helpContent = (submitMessage ='') => ({
     answerTwo: "You can check the parking lot details on the reservation page.",
     questionThree: "Do I need to print my reservation?",
     answerThree: "No, the system will record your number plate.",
+    contactUs: "Contact Us",
+    email: "Email",
+    message: "Message",
+    sendMessage: "Send Message",
+    FAQ: "FAQ",
     submitMessage: submitMessage
   });
 

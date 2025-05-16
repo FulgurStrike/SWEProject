@@ -18,6 +18,11 @@ const loginContent = {
     signUp: "Sign Up",
     logout: "Logout",
     footerText: "2025 UEA Software Engineering Group 111",
+    email: "Email Address",
+    password: "Password",
+    register: "Register",
+    dontHaveAccount: "Don't have an account?",
+    invalidCredentials: ""
 };
   
 // Login to account
