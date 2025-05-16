@@ -57,7 +57,7 @@ exports.makeReservation = async (req, res) => {
         res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
         
         //res.redirect(`/payment`);
-        res.render('pending', { ...indexContent, message: 'Your parking request is pending approval.' });  
+        res.render('pending', { ...indexContent, message: 'Your parking request is pending approval.', requestID: parkingRequest._id.toString()});  
 
         //res.render('viewParkingRequests')
       } catch (err) {
