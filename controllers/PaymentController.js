@@ -69,7 +69,7 @@ exports.renderPaymentPage = async (req, res) => {
         login: "Login",
         signUp: "Sign Up",
         logout: "Logout",
-        footerText: "2025 Simple starter website",
+        footerText: "2025 UEA Software Engineering Group 111",
         amount: amount.toFixed(2),
         duration,
         arrivalTime: arrival.toLocaleString(),
