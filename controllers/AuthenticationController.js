@@ -17,7 +17,7 @@ const loginContent = {
     login: "Login",
     signUp: "Sign Up",
     logout: "Logout",
-    footerText: "2025 Simple starter website",
+    footerText: "2025 UEA Software Engineering Group 111",
     invalidCredentials: ""
 };
   
