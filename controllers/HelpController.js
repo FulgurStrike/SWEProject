@@ -1,8 +1,8 @@
 const Message= require('../models/messages');
 
 const helpContent = (submitMessage ='') => ({
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     help: "Help",
     login: "Login",

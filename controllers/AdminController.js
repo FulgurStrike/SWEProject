@@ -58,8 +58,8 @@ exports.rejectParkingRequest = async (req, res) => {
 const Message = require('../models/messages');
 
 const loginContent = {
-      title: "ParkName",
-      siteName: "ParkName",
+      title: "UEA Park - Admin Login",
+      siteName: "UEA Park - Admin Login",
       home: "Home",
       help: "Help",
       logout: "logout",
@@ -171,8 +171,8 @@ exports.renderAdminPage = async (req, res) => {
       res.redirect("/adminDashboard/login");
     } else {
       const adminContent = {
-        title: "ParkName",
-        siteName: "ParkName",
+        title: "UEA Park - Admin",
+        siteName: "UEA Park - Admin",
         home: "Home",
         about: "About",
         services: "Services",
