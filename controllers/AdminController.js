@@ -66,7 +66,7 @@ const loginContent = {
       signUp: "Sign Up",
       footerText: "2025 UEA Software Engineering Group 111",
       invalidCredentials: "",
-      adminLogIn: "Admin Login",
+      adminLogin: "Admin Login",
       email: "Email Address",
       password: "Password",
       register: "Register",
