@@ -41,7 +41,7 @@ exports.makeReservation = async (req, res) => {
 
       driverID = req.cookies.user_id;
 
-      parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
+      const parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
 
       driver = await DriverUser.findById(driverID).exec();
 
@@ -50,14 +50,15 @@ exports.makeReservation = async (req, res) => {
           driver: driver,
           parkingLot: parkingLot,
           arrivalTime: arrivalTime,
-          departureTime: departureTime
-
+          departureTime: departureTime,
+          requestStatus: 'pending'
         });
         await parkingRequest.save();
 
         res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
-
-        res.redirect(`/payment`);  
+        
+        //res.redirect(`/payment`);
+        res.render('pending', { ...indexContent, message: 'Your parking request is pending approval.' });  
 
         //res.render('viewParkingRequests')
       } catch (err) {
@@ -102,6 +103,37 @@ exports.viewParkingRequest = async (req, res) => {
         req.flash('error', err.message);
             return res.redirect('back');
     }
+};
+
+// Poll request status
+exports.checkRequestStatus = async (req, res) => {
+  const requestID = req.cookies.requestID;
+
+  if (!requestID) {
+    return res.redirect('/');
+  }
+
+  try {
+    const request = await ParkingRequest.findById(requestID);
+
+    if (!request) {
+      return res.redirect('/');
+    }
+
+    if (request.requestStatus === 'approved') {
+      return res.redirect(`/payment/${requestID}`);
+    } else if (request.requestStatus === 'rejected') {
+      res.clearCookie("requestID");
+      req.flash('error', 'Your parking request was rejected.');
+      return res.redirect('/');
+    } else {
+      return res.render('pending', { ...indexContent, message: 'Your parking request is still pending approval.', requestID: request._id.toString()});
+    }
+
+  } catch (err) {
+    console.error(err);
+    return res.redirect('/');
+  }
 };
 
 exports.showReservationPage = (req, res) => {
