@@ -35,11 +35,24 @@ exports.makePayment = async (req, res) => {
         await payment.save();
 
         return res.render('paymentConfirmation', {
-            title: 'Payment Successful',
-            message: 'Your payment was successfully processed!',
-            parkingRequestID: parkingRequestID,
-            amount: amount.toFixed(2),
-            paymentStatus: payment.paymentStatus
+            
+          title: "ParkName",
+          siteName: "ParkName",
+          home: "Home",
+          help: "Help",
+          login: "Login",
+          signUp: "Sign Up",
+          logout: "Logout",
+          footerText: "2025 UEA Software Engineering Group 111",
+          amount: amount.toFixed(2),
+          duration,
+          arrivalTime: arrival.toLocaleString(),
+          departureTime: departure.toLocaleString(),
+          title: 'Payment Successful',
+          message: 'Your payment was successfully processed!',
+          parkingRequestID: parkingRequestID,
+          amount: amount.toFixed(2),
+          paymentStatus: payment.paymentStatus
         });
     } catch (err) {
         console.error(err);
