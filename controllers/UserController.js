@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt');
 const DriverUser = require('../models/driveruser');
+const Message = require('../models/messages');
+const ParkingRequest = require('../models/parkingrequest');
+const ParkingLot = require('../models/parkinglot');
 
 const signupContent = {
     title: "ParkName",
@@ -119,3 +122,35 @@ exports.showSignupPage = (req, res) => {
     res.render('signup', signupContent);
 };
 
+const userDashboardContent = {
+    title: "ParkName",
+    siteName: "ParkName",
+    home: "Home",
+    about: "About",
+    services: "Services",
+    help: "Help",
+    login: "Login",
+    logout:"logout",
+    signUp: "Sign Up",
+    footerText: "2025 UEA Software Engineering Group 111",
+  };
+
+  
+
+exports.renderUserDashboard = async (req,res) => {
+    try {
+        const user = await DriverUser.findById(req.cookies.user_id);
+        const messages = await Message.find({});
+        const requests = await ParkingRequest.find({})
+            .populate('driver')
+            .populate('parkingLot');
+        const parkingLots = await ParkingLot.find({});
+        const drivers = await DriverUser.find({}); 
+        console.log("user:",user);
+
+        res.render('userDashboard', { ...userDashboardContent, messages, requests, parkingLots, drivers, user });
+    } catch (err) {
+        console.error('Failed to fetch messages:', err);
+        res.render('userDashboard', { ...userDashboardContent, messages: [], requests: [], parkingLots: [], drivers: [], user });      
+    }
+}
