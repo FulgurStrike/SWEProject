@@ -60,13 +60,17 @@ const loginContent = {
       title: "ParkName",
       siteName: "ParkName",
       home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Help",
+      help: "Help",
+      logout: "logout",
       login: "Login",
       signUp: "Sign Up",
-      footerText: "2025 Simple starter website",
-      invalidCredentials: ""
+      footerText: "2025 UEA Software Engineering Group 111",
+      invalidCredentials: "",
+      adminLogIn: "Admin Login",
+      email: "Email Address",
+      password: "Password",
+      register: "Register",
+      dontHaveAccount: "Don't have an account?"
     };
 
 exports.renderAdminLogin = (req, res) => {   
@@ -88,12 +92,13 @@ exports.adminLogin = async (req, res) => {
             loginContent.invalidCredentials = "Wrong username or Password";
             res.render("adminlogin", loginContent);
         }
-
+        else{
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             loginContent.invalidCredentials = "Wrong Username or Password";
             res.render("adminLogin", loginContent);
         }
+      
         // Create JWT token with user info
         const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
         
@@ -104,6 +109,7 @@ exports.adminLogin = async (req, res) => {
         res.cookie('user_id', userID);
 
         return res.redirect('/adminDashboard');
+      }
     } catch (err) {
         console.error(err);
         return res.send(err.message);
@@ -149,10 +155,11 @@ exports.renderAdminPage = async (req, res) => {
         home: "Home",
         about: "About",
         services: "Services",
-        contact: "Help",
+        help: "Help",
         login: "Login",
+        logout:"logout",
         signUp: "Sign Up",
-        footerText: "2025 Parkname Management System"
+        footerText: "2025 UEA Software Engineering Group 111",
       };
       try {
         const messages = await Message.find({});

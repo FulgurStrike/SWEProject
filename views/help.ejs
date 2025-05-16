@@ -8,17 +8,37 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+  <% if (errorMessages.length) { %>
+    <% errorMessages.forEach(msg => { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
+  
+  <% if (successMessages.length) { %>
+    <% successMessages.forEach(msg => { %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
 
   <!-- Navbar -->
   <nav class="bg-blue-600 text-white p-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-xl"><%= siteName || 'Parking System' %></div>
+      <div class="text-xl"><%= siteName || 'placeholder' %></div>
       <ul class="flex space-x-6">
-        <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
-        <li><a href="/help" class="hover:text-gray-300 font-bold underline"><%=help %></a></li>
-        <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
-        <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
-        <li><a href="/logout" class="hover:text-gray-300"><%=logout %></a></li>
+        <li><a href="/" class="hover:text-gray-300"><%= home %></a></li>
+        <li><a href="/help" class="hover:text-gray-300 font-bold underline"><%= help %></a></li>
+
+        <% if (!isLoggedIn) { %>
+          <li><a href="/login" class="hover:text-gray-300"><%= login %></a></li>
+          <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
+        <% } else { %>
+          <li>
+            <a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
+            <% } %>
       </ul>
     </div>
   </nav>
@@ -28,37 +48,38 @@
     
     <!-- Help Instructions -->
     <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-blue-600">How to Use This Webpage</h2>
+      <h2 class="text-2xl font-bold mb-4 text-blue-600"><%=instructionTitle%></h2>
       <ol class="list-decimal list-inside text-gray-700 space-y-2">
-        <li>Log in or create an account to begin.</li>
-        <li>Navigate to the home/reservation page from the header.</li>
-        <li>Enter your desired location, time, and vehicle registration.</li>
-        <li>Click the "Reserve Spot" button.</li>
-        <li>Complete your payment using one of the available methods.</li>
+        <li><%=howOne%></li>
+        <li><%=howTwo%></li>
+        <li><%=howThree%></li>
+        <li><%=howFour%></li>
+        <li><%=howFive%></li>
+        <li><%=howSix%></li>
       </ol>
 
-      <h3 class="mt-6 text-xl font-semibold text-blue-600">FAQs</h3>
+      <h3 class="mt-6 text-xl font-semibold text-blue-600"><%=FAQ%></h3>
       <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
-        <li><strong>Q:</strong> Can I cancel my reservation?<br><strong>A:</strong> Yes, go to your profile to manage reservations.</li>
-        <li><strong>Q:</strong> What if I’m running late?<br><strong>A:</strong> Please notify support through the contact form.</li>
-        <li><strong>Q:</strong> Do I need to print anything?<br><strong>A:</strong> No, your license plate will be recognized automatically.</li>
+        <li><strong><%=q%></strong> <%=questionOne%><br><strong><%=a%></strong><%=answerOne%></li>
+        <li><strong><%=q%></strong><%=questionTwo%><br><strong><%=a%></strong><%=answerTwo%></li>
+        <li><strong><%=q%></strong><%=questionThree%><br><strong><%=a%></strong><%=answerThree%></li>
       </ul>
     </div>
 
     <!-- Contact Form -->
     <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-blue-600">Contact Us</h2>
+      <h2 class="text-2xl font-bold mb-4 text-blue-600"><%=contactUs%></h2>
       <form action="/submit-contact" method="POST" class="space-y-4">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700"><%=email%></label>
           <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-md" required>
         </div>
         <div>
-          <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+          <label for="message" class="block text-sm font-medium text-gray-700"><%=message%></label>
           <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-md" required></textarea>
         </div>
         <div class="text-right">
-          <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">Send Message</button>
+          <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700"><%=sendMessage%></button>
         </div>
       </form>
         <h3 class="mt-6 text-xl font-semibold text-blue-600"><%=submitMessage%></h3>
