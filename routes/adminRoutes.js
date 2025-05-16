@@ -8,11 +8,13 @@ async function isAdmin(req, res, next) {
     try {
         const adminUser = await AdminUser.findById(req.user.id);
         if (!adminUser) {
-            return res.status(403).send('Unauthorized: Admin access required');
+            req.flash('error', 'Unauthorized: Admin access required');
+        return res.redirect('back');
         }
         next();
     } catch (error) {
-        return res.status(500).send(error.message);
+        req.flash('error', error.message);
+        return res.redirect('back');
     }
 }
 
