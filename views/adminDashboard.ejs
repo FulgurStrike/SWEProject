@@ -135,6 +135,50 @@
     </div>
   </div>
 
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Driver List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Drivers</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (drivers.length === 0) { %>
+          <li class="text-gray-500">No drivers found.</li>
+        <% } else { %>
+          <% drivers.forEach(function(req, i) { %>
+          <li
+              class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+              data-id="<%= req._id %>"
+              data-firstname="<%= req.firstName %>"
+              data-lastname="<%= req.lastName %>"
+              data-email="<%= req.email %>"
+              onclick="selectUser(this)"
+            >
+              <p><strong>First Name:</strong> <%= req.firstName %></p>
+              <p><strong>Last Name:</strong> <%= req.lastName %></p>
+              <p><strong>Email Address:</strong> <%= req.email %></p>
+          </li>
+          <% }); %> 
+          <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Driver Details</h2>
+      <div id="selectedUser" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+        <p>Select a driver from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/adminDashboard/banUser" method="POST">
+          <input type="hidden" id="banUser" name="id" />
+          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Ban User</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
     <!-- Contact Messages Section -->
         <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
@@ -228,8 +272,6 @@
               }
 
             }
-
-            
           </script>
           <script>
             function selectApprovedRequest(el) {
@@ -238,6 +280,23 @@
               rejectID = document.getElementById('approvedRequestId');
               rejectID.setAttribute("value", id);
             }
+          </script>
+          <script>
+            function selectUser(el) {
+              const id = el.dataset.id;
+              const firstName = el.dataset.firstname;
+              const lastName = el.dataset.lastname;
+              const email = el.dataset.email;
+
+              acceptID = document.getElementById('banUser')
+              acceptID.setAttribute("value", id);
+
+              document.getElementById('selectedUser').innerHTML = `
+                <p><strong>First Name:</strong> ${firstName}</p>
+                <p><strong>Last Name:</strong> ${lastName}</p>
+                <p><strong>Email Address:</strong> ${email}</p>`;
+            }
+
           </script>
     </body>
 </html> 

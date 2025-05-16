@@ -28,4 +28,6 @@ router.post('/adminDashboard/reject', AdminController.rejectParkingRequest);
 
 router.post('/adminDashboard/freeSpace', AdminController.freeSpace);
 
+router.post('/adminDashboard/banUser', AdminController.banUser);
+
 module.exports = router;

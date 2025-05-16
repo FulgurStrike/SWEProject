@@ -1,6 +1,7 @@
 const ParkingRequest = require('../models/parkingrequest');
 const User = require('../models/user');
 const ParkingLot = require('../models/parkinglot');
+const DriverUser = require("../models/driveruser");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
@@ -123,7 +124,15 @@ exports.freeSpace = async (req, res) => {
 
   res.redirect("/adminDashboard");
 
-;}
+};
+
+exports.banUser = async (req, res) => {
+  const userId = req.body.id;
+
+  const user = await User.findByIdAndDelete(userId);
+
+  res.redirect("/adminDashboard");
+}
 
 
 exports.renderAdminPage = async (req, res) => {
@@ -151,11 +160,12 @@ exports.renderAdminPage = async (req, res) => {
           .populate('driver')
           .populate('parkingLot');
         const parkingLots = await ParkingLot.find({});
+        const drivers = await DriverUser.find({}); 
 
-        res.render('adminDashboard', { ...adminContent, messages, requests, parkingLots });
+        res.render('adminDashboard', { ...adminContent, messages, requests, parkingLots, drivers });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('adminDashboard', { ...adminContent, messages: [], requests: [], parkingLots: [] });      
+        res.render('adminDashboard', { ...adminContent, messages: [], requests: [], parkingLots: [], drivers: [] });      
       }
     }
 
