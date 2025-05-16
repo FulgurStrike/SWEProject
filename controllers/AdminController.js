@@ -88,12 +88,13 @@ exports.adminLogin = async (req, res) => {
             loginContent.invalidCredentials = "Wrong username or Password";
             res.render("adminlogin", loginContent);
         }
-
+        else{
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             loginContent.invalidCredentials = "Wrong Username or Password";
             res.render("adminLogin", loginContent);
         }
+      
         // Create JWT token with user info
         const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
         
@@ -104,6 +105,7 @@ exports.adminLogin = async (req, res) => {
         res.cookie('user_id', userID);
 
         return res.redirect('/adminDashboard');
+      }
     } catch (err) {
         console.error(err);
         return res.send(err.message);
