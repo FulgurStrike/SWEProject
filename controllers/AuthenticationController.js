@@ -10,8 +10,8 @@ if (!process.env.JWT_TOKEN /* or .JWT_SECRET */) {
   
 
 const loginContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     help: "Help",
     login: "Login",

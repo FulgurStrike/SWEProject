@@ -6,8 +6,8 @@ const ParkingLot = require('../models/parkinglot');
 const user = require('../models/user');
 
 const signupContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     help: "Help",
     login: "Login",
@@ -74,8 +74,8 @@ exports.registerUser = async (req, res) => {
         console.log("Form data:", req.body);
 
         return res.render('signup', {
-            title: "ParkName",
-            siteName: "ParkName",
+            title: "UEA Park",
+            siteName: "UEA Park",
             home: "Home",
             about: "About",
             services: "Services",
@@ -124,8 +124,8 @@ exports.showSignupPage = (req, res) => {
 };
 
 const userDashboardContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     about: "About",
     services: "Services",
