@@ -18,7 +18,8 @@ exports.makePayment = async (req, res) => {
     try {
         const parkingRequest = await ParkingRequest.findById(parkingRequestID);
         if (!parkingRequestID) {
-            return res.status(400).send('Request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
         const arrival = new Date(parkingRequest.arrivalTime);
         const departure = new Date(parkingRequest.departureTime);
@@ -42,7 +43,8 @@ exports.makePayment = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+            return res.redirect('back');
     }
 };
 
@@ -51,7 +53,8 @@ exports.renderPaymentPage = async (req, res) => {
    const parkingRequestID = req.cookies.requestID;
    const parkingRequest = await ParkingRequest.findById(parkingRequestID);
    if (!parkingRequestID) {
-     return res.status(400).send('Request not found');
+     req.flash('error', 'Parking request not found');
+            return res.redirect('back');
    }
   
    const arrival = new Date(parkingRequest.arrivalTime);
@@ -59,14 +62,13 @@ exports.renderPaymentPage = async (req, res) => {
    const { duration, amount } = calculatePayment(arrival, departure);
 
     const paymentContent = {
-        title: "ParkName",           
+        title: "ParkName",
         siteName: "ParkName",
         home: "Home",
-        about: "About",
-        services: "Services",
-        contact: "Contact",
+        help: "Help",
         login: "Login",
         signUp: "Sign Up",
+        logout: "Logout",
         footerText: "2025 Simple starter website",
         amount: amount.toFixed(2),
         duration,

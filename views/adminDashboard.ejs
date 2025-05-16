@@ -1,56 +1,302 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta lang="en-GB">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">
-        <link rel="stylesheet" href="/output.css">
-        <title><%= title || 'Admin Dashboard' %></title>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    <body class="font-sans bg-gray-50">
-        <!--Navigation Bar-->
-        <nav class="bg-blue-500 text-white p-4">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="text-xl"><%= siteName || 'placeholder' %></div>
-            <ul class="flex space-x-6">
-                <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
-                <li><a href="/about" class="hover:text-gray-300"><%=about %></a></li>
-                <li><a href="/services" class="hover:text-gray-300"><%=services %></a></li>
-                <li><a href="/contact" class="hover:text-gray-300"><%=contact %></a></li>
-                <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
-                <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
-            </ul>   
-            </div>
-        </nav>
-        <!--Admin Dashboard start-->
-        <div class="flex h-screen p-6">
-            <div class="w-1/2 bg-orange-400 p-6 overflow-auto">                 <!--Left Box-->
-                <h1 class="text-white text-xl font-bold">left box</h1>          
-                <p class="text-white">This is the left side</p>
-                <div name="requestBlock" class="grid grid-cols-1 gap-4">
-                    <div class="bg-white p-4 rounded shadow hover:bg-gray-400">Box 1</div>
-                </div>
-                
-            </div>
-            <div class="w-1/25 bg-white-400"></div>                             <!--Seperator between boxes-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/output.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <% if (errorMessages.length) { %>
+    <% errorMessages.forEach(msg => { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
+  
+  <% if (successMessages.length) { %>
+    <% successMessages.forEach(msg => { %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <%= msg %>
+      </div>
+    <% }) %>
+  <% } %>
 
-            <div class="w-1/2 bg-orange-400 p-6 overflow-auto relative">        <!--Right Box-->
-                <h1 class="text-white text xl font-bold ">right box</h1>         
-                <p class="text-white">This is the right side</p>
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="text-xl font-bold">Admin Dashboard</div>
+      <ul class="flex space-x-6">
+        <li><a href="/" class="hover:text-gray-300">Home</a></li>
+        <li><a href="/logout" class="hover:text-gray-300">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
 
-                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded absolute right-0 bottom-0">
-                    REJECT
-                </button>
-                <select name ="RejectReason" class="mx-w-5xs block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline absolute bottom-20 right-10 ">
-                    <option>Parking Space already taken</option>
-                    <option>Invalid Time Slot</option>
-                    <option>Invalid Vehicle for parking space type</option>
-                    <option>Requested a restricted parking space</option>
-                </select>
-                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-10 px-10 border border-green-700 rounded absolute left-5 bottom-5">
-                    ACCEPT
-                </button>
-        </div>
+     <!-- Main Section -->
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Booking Requests List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Requests</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (requests.length === 0) { %>
+          <li class="text-gray-500">No requests found.</li>
+        <% } else { %>
+          <% requests.forEach(function(req, i) { %>
+            <% if (req.requestStatus === 'pending') { %>
+              <li
+                class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+                data-id="<%= req._id %>"
+                data-arrival="<%= req.arrivalTime %>"
+                data-departure="<%= req.departureTime %>"
+                data-parkinglot="<%= req.parkingLot.lotName %>"
+                data-first="<%= req.driver.firstName %>"
+                data-last="<%= req.driver.lastName %>"
+                data-reg="<%= req.driver.reg %>"
+                onclick="selectRequest(this)"
+              >
+                <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
+                <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
+                <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
+                <p><strong>First Name:</strong> <%= req.driver.firstName %></p>
+                <p><strong>Last Name:</strong> <%= req.driver.lastName %></p>
+                <p><strong>Reg:</strong> <%= req.driver.reg %></p>
+                <p><strong>Status:</strong> <%= req.requestStatus %></p>
+              </li>
+            <% } %>
+          <% }); %>
+        <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Selected Request</h2>
+      <div id="selectedRequest" class="text-gray-700 space-y-3">
+        <p>Select a request from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/adminDashboard/accept" method="POST">
+          <input type="hidden" id="acceptId" name="id" />
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Accept</button>
+        </form>
+        <form action="/adminDashboard/reject" method="POST">
+          <input type="hidden" id="rejectId" name="id" />
+          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Reject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Parking Lot List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Parking Lots</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (parkingLots.length === 0) { %>
+          <li class="text-gray-500">No lots found.</li>
+        <% } else { %>
+          <% parkingLots.forEach(function(req, i) { %>
+          <li
+              class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+              data-id="<%= req._id %>"
+              data-lotname="<%= req.lotName %>"
+              data-capacity="<%= req.capacity %>"
+              data-availablespaces="<%= req.availableSpaces %>"
+              onclick="selectParkingLot(this, requests)"
+            >
+              <p><strong>Lot Name:</strong> <%= req.lotName %></p>
+              <p><strong>Capacity:</strong> <%= req.capacity %></p>
+              <p><strong>Available Spaces:</strong> <%= req.availableSpaces %></p>
+          </li>
+          <% }); %> 
+          <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Spaces Occupied</h2>
+      <div id="selectedParkingLot" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+        <p>Select a parking lot from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/adminDashboard/freeSpace" method="POST">
+          <input type="hidden" id="approvedRequestId" name="id" />
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Free Space</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+    <!-- Left: Driver List -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Drivers</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (drivers.length === 0) { %>
+          <li class="text-gray-500">No drivers found.</li>
+        <% } else { %>
+          <% drivers.forEach(function(req, i) { %>
+          <li
+              class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+              data-id="<%= req._id %>"
+              data-firstname="<%= req.firstName %>"
+              data-lastname="<%= req.lastName %>"
+              data-email="<%= req.email %>"
+              onclick="selectUser(this)"
+            >
+              <p><strong>First Name:</strong> <%= req.firstName %></p>
+              <p><strong>Last Name:</strong> <%= req.lastName %></p>
+              <p><strong>Email Address:</strong> <%= req.email %></p>
+          </li>
+          <% }); %> 
+          <% } %>
+      </ul>
+      
+    </div>
+
+    <!-- Right: Selected Booking Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Driver Details</h2>
+      <div id="selectedUser" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+        <p>Select a driver from the left to view details.</p>
+      </div>
+      <div class="mt-6 flex space-x-4">
+        <form action="/adminDashboard/banUser" method="POST">
+          <input type="hidden" id="banUser" name="id" />
+          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Ban User</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- Contact Messages Section -->
+        <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
+            <ul class="space-y-4">
+                <% if (messages.length === 0) { %>
+                    <li class="text-gray-500">No messages found.</li>
+                  <% } else { %>
+                    <% messages.forEach(function(Message) {
+                      if (Message.senderEmail && Message.senderMessage){ %>
+                      <li class="border border-gray-300 p-4 rounded-md">
+                        <p><strong>Email:</strong> <%= Message.senderEmail %></p>
+                        <p><strong>Message:</strong> <%= Message.senderMessage %></p>
+                      </li>
+                    <% }}) %>
+                  <% } %>
+              </ul>
+          </div>
+          <script>
+            function selectRequest(el) {
+              const id        = el.dataset.id;
+              const arrival   = el.dataset.arrival;
+              const departure = el.dataset.departure;
+              const first     = el.dataset.first;
+              const parkinglot = el.dataset.parkinglot;
+              const last      = el.dataset.last;
+              const reg       = el.dataset.reg;
+          
+              acceptID = document.getElementById('acceptId')
+              acceptID.setAttribute("value", id);
+              
+              rejectID = document.getElementById('rejectId');
+              rejectID.setAttribute("value", id);
+          
+              document.getElementById('selectedRequest').innerHTML = `
+                <p><strong>Arrival Time:</strong> ${arrival}</p>
+                <p><strong>Departure Time:</strong> ${departure}</p>
+                <p><strong>First Name:</strong> ${first}</p>
+                <p><strong>Last Name:</strong> ${last}</p>
+                <p><strong>Reg:</strong> ${reg}</p>
+                <p><strong>Status:</strong> pending</p>`;
+            }
+
+          </script>
+          <script>
+            const requests = <%- JSON.stringify(requests) %>;
+          </script>
+          <script>
+            function selectParkingLot(el, requests) {
+
+              
+              const id = el.dataset.id;
+              requestsInLot = [];
+
+
+
+              requests.forEach(function (req) {
+                if (req.parkingLot._id === id) {
+                  if (req.requestStatus == "approved") {
+                    requestsInLot.push(req);
+                  }
+                }
+              });
+
+              selectedLot = document.getElementById('selectedParkingLot')
+
+              selectedLot.innerHTML = '';
+
+              if (requestsInLot.length === 0) {
+                selectedLot.innerHTML = `<p>No approved bookings for this lot.</p>`;
+              } else {
+                requestsInLot.forEach(req => {
+                  const item = document.createElement("li");
+                  item.className = "border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer";
+                  item.setAttribute("data-id", req._id);
+                  item.setAttribute("data-arrival", req.arrivalTime);
+                  item.setAttribute("data-departure", req.departureTime);
+                  item.setAttribute("data-parkinglot", req.parkingLot.lotName);
+                  item.setAttribute("data-first", req.driver.firstName);
+                  item.setAttribute("data-last", req.driver.lastName);
+                  item.setAttribute("data-reg", req.driver.reg);
+                  item.onclick = function () {
+                    selectApprovedRequest(this);  // Reuse the same selection logic
+                  };
+
+                  item.innerHTML = 
+                  `<p><strong>Driver Name:</strong> ${req.driver.firstName} ${req.driver.lastName}</p>
+                  <p><strong>Arrival Time:</strong> ${req.arrivalTime}</p>
+                  <p><strong>Departure Time:</strong> ${req.departureTime}</p>`;
+                  selectedLot.appendChild(item);
+                });
+              }
+
+            }
+          </script>
+          <script>
+            function selectApprovedRequest(el) {
+              const id = el.dataset.id;
+
+              rejectID = document.getElementById('approvedRequestId');
+              rejectID.setAttribute("value", id);
+            }
+          </script>
+          <script>
+            function selectUser(el) {
+              const id = el.dataset.id;
+              const firstName = el.dataset.firstname;
+              const lastName = el.dataset.lastname;
+              const email = el.dataset.email;
+
+              acceptID = document.getElementById('banUser')
+              acceptID.setAttribute("value", id);
+
+              document.getElementById('selectedUser').innerHTML = `
+                <p><strong>First Name:</strong> ${firstName}</p>
+                <p><strong>Last Name:</strong> ${lastName}</p>
+                <p><strong>Email Address:</strong> ${email}</p>`;
+            }
+
+          </script>
     </body>
-</html>
+</html> 

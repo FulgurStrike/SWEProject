@@ -16,10 +16,9 @@
       <div class="text-xl"><%= siteName || 'placeholder' %></div>
       <ul class="flex space-x-6">
         <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
-        <li><a href="/help" class="hover:text-gray-300"><%=help %></a></li>
-        <li><a href="/login" class="hover:text-gray-300 font-bold underline"><%=login %></a></li>
+        <li><a href="/help" class="hover:text-gray-300"><%=contact %></a></li>
+        <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
         <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
-        <li><a href="/logout" class="hover:text-gray-300"><%=logout %></a></li>
       </ul>
     </div>
   </nav>
@@ -27,8 +26,8 @@
   <!-- SignUp Form Section -->
   <section class="py-16 bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Log In</h2>
-        <form action="/login" method="POST">
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Admin Log In</h2>
+        <form action="/adminDashboard/login" method="POST">
 
             <div class="mb-4">
               <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
@@ -62,5 +61,10 @@
       </div>
     </footer>
 
+    <% if (invalidCredentials) { %>
+      <script>
+        alert("<%= invalidCredentials %> ");
+      </script>
+    <% } %>
 
 </html>

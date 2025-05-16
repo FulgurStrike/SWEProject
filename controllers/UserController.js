@@ -1,6 +1,18 @@
 const bcrypt = require('bcrypt');
 const DriverUser = require('../models/driveruser');
 
+const signupContent = {
+    title: "ParkName",
+    siteName: "ParkName",
+    home: "Home",
+    help: "Help",
+    login: "Login",
+    signUp: "Sign Up",
+    logout: "Logout",
+    footerText: "2025 Simple starter website",
+    errorMessage: "",
+    formData:{}
+  };
 /* Input validation
 const validatePassword = (password) => {
     const minLength = 8;
@@ -15,6 +27,7 @@ exports.registerUser = async (req, res) => {
 
     const { firstName, lastName, email, password, reg } = req.body;
     
+    
     /* Validate the password format
     if (!validatePassword(password)) {
          return res.send('Password does not meet the requirements.');
@@ -25,11 +38,12 @@ exports.registerUser = async (req, res) => {
 
         const existingUser = await DriverUser.findOne({ email });
 
-        if (existingUser) {
-            return res.send('Email already exists');
+        if(existingUser){
+            console.log("duplicate email :",email)
+            signupContent.errorMessage="email already in use";
+            res.render('signup',signupContent)
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new DriverUser({
@@ -42,9 +56,32 @@ exports.registerUser = async (req, res) => {
         await user.save();
         
         res.redirect('/login');
+
     } catch (err) {
-        console.error(err);
-        return res.send(err.message);
+        console.error('An error has occured during driver Reg: ', err.message);
+
+        let errorMessage = "something went wrong. Please try again.";
+
+        if(err.code == 11000 & err.keyPattern?.email){
+            errorMessage ="Email is already in use. Please try another"
+        }
+
+        console.log("Error:", errorMessage);
+        console.log("Form data:", req.body);
+
+        return res.render('signup', {
+            title: "ParkName",
+            siteName: "ParkName",
+            home: "Home",
+            about: "About",
+            services: "Services",
+            contact: "Help",
+            login: "Login",
+            signUp: "Sign Up",
+            footerText: "2025 Simple starter website",
+            errorMessage,
+            formData: req.body // send the posted form data back to fill fields
+        });
     }
 };
 
@@ -78,16 +115,7 @@ exports.registerUser = async (req, res) => {
 
 // Render sign up page
 exports.showSignupPage = (req, res) => {
-    const signupContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      footerText: "2025 Simple starter website"
-    };
-      res.render('signup', signupContent);
+  
+    res.render('signup', signupContent);
 };
+

@@ -1,5 +1,20 @@
-const ParkingRequest = require('../models/parkingrequest');
 const DriverUser = require('../models/driveruser');
+const ParkingRequest = require("../models/parkingrequest");
+const ParkingLot = require("../models/parkinglot");
+
+const indexContent = {
+    title: "ParkName",
+    siteName: "ParkName",
+    home: "Home",
+    help: "Help",
+    login: "Login",
+    signUp: "Sign Up",
+    logout: "Logout",
+    footerText: "2025 Simple starter website",
+    heroHeader: "Welcome to our Website",
+    errorMessage: "",
+    footerText: "2025 Simple starter Website"
+  }
 
 
 String.prototype.toObjectId = function() {
@@ -9,39 +24,49 @@ String.prototype.toObjectId = function() {
 
 // Create parking request
 exports.makeReservation = async (req, res) => {
-    const { location, arrivalTime, departureTime, registration } = req.body;
+    const { parkingLotName, arrivalTime, departureTime, registration } = req.body;
 
-    console.log(location, arrivalTime, departureTime, registration);
-    
-    //console.log(req.body);
+    const arr = new Date(arrivalTime);
+    const dep = new Date(departureTime);
 
-    console.log(req.cookies)
-  
+    if(arr > dep){
+        console.log("timing error : ", arr , " and :", dep);
+        indexContent.errorMessage = "Arrival time after departure time."
+        res.render('reservation', indexContent);
+        indexContent.errorMessage = "";
+    } else {
 
-    driverID = req.cookies.user_id;
-    console.log(driverID);
+      console.log(parkingLotName, arrivalTime, departureTime, registration);
 
 
-    driver = await DriverUser.findById(driverID).exec();
-    console.log(driver.email);
+      driverID = req.cookies.user_id;
 
-    try {
+      parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
+
+      driver = await DriverUser.findById(driverID).exec();
+
+      try {
         const parkingRequest = new ParkingRequest({
-            driver: driver,
-            arrivalTime: arrivalTime,
-            departureTime: departureTime
+          driver: driver,
+          parkingLot: parkingLot,
+          arrivalTime: arrivalTime,
+          departureTime: departureTime
+
         });
         await parkingRequest.save();
 
         res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
 
-        res.redirect(`/payment?requestId=${parkingRequest._id}`);  
+        res.redirect(`/payment`);  
 
         //res.render('viewParkingRequests')
-    } catch (err) {
-        return res.status(500).send(err.message);
+      } catch (err) {
+        req.flash('error', err.message);
+        return res.redirect('back');
+
+      }
     }
-};
+}
 
 // View all parking requests
 exports.viewUserParkingRequests = async (req, res) => {
@@ -54,7 +79,8 @@ exports.viewUserParkingRequests = async (req, res) => {
             .populate('driver');
         res.render('viewParkingRequests', { parkingRequests });
     } catch (error) {
-        return res.status(500).send(error.message);
+        req.flash('error',err.message);
+            return res.redirect('back');
     }
 }
 
@@ -67,29 +93,19 @@ exports.viewParkingRequest = async (req, res) => {
             .populate('parkingSpace')
             .populate('driver');
         if (!parkingRequest) {
-            return res.status(404).send('Parking request not found');
+            req.flash('error', 'Parking request not found');
+            return res.redirect('back');
         }
 
         res.render('viewParkingRequest', {parkingRequest});
     } catch (err) {
-        return res.status(500).send(err.message);
+        req.flash('error', err.message);
+            return res.redirect('back');
     }
 };
 
 exports.showReservationPage = (req, res) => {
-    const indexContent = {
-      title: "ParkName",
-      siteName: "ParkName",
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      login: "Login",
-      signUp: "Sign Up",
-      heroHeader: "Welcome to our Website",
-
-      footerText: "2025 Simple starter Website"
-    }
+    
     res.render('reservation', indexContent);
 };
 
