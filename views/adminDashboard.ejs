@@ -223,7 +223,7 @@
 
           </script>
           <script>
-            const requests = <%- JSON.stringify(requests) %>;
+            const requests = JSON.parse('<%- JSON.stringify(requests) %>');
           </script>
           <script>
             function selectParkingLot(el, requests) {
