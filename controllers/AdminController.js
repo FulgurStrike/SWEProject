@@ -109,6 +109,22 @@ exports.adminLogin = async (req, res) => {
     }
 };
 
+exports.freeSpace = async (req, res) => {
+  const approvedRequestId = req.body.id;
+
+  console.log(approvedRequestId);
+
+  const approvedRequest = await ParkingRequest.findById(approvedRequestId);
+  const parkingLot = await ParkingLot.findById(approvedRequest.parkingLot._id);
+  parkingLot.availableSpaces += 1;
+  await parkingLot.save();
+
+  await ParkingRequest.findByIdAndDelete(approvedRequestId);
+
+  res.redirect("/adminDashboard");
+
+;}
+
 
 exports.renderAdminPage = async (req, res) => {
 
@@ -134,11 +150,12 @@ exports.renderAdminPage = async (req, res) => {
         const requests = await ParkingRequest.find({})
           .populate('driver')
           .populate('parkingLot');
+        const parkingLots = await ParkingLot.find({});
 
-        res.render('adminDashboard', { ...adminContent, messages, requests });
+        res.render('adminDashboard', { ...adminContent, messages, requests, parkingLots });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('adminDashboard', { ...adminContent, messages: [], requests: [] });      
+        res.render('adminDashboard', { ...adminContent, messages: [], requests: [], parkingLots: [] });      
       }
     }
 
