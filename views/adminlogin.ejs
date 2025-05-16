@@ -11,17 +11,25 @@
   <body class="font-sans bg-gray-50">
 
     <!-- Navbar -->
-  <nav class="bg-blue-600 text-white p-4">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-xl"><%= siteName || 'placeholder' %></div>
-      <ul class="flex space-x-6">
-        <li><a href="/" class="hover:text-gray-300"><%=home %></a></li>
-        <li><a href="/help" class="hover:text-gray-300"><%=help %></a></li>
-        <li><a href="/login" class="hover:text-gray-300"><%=login %></a></li>
-        <li><a href="/signup" class="hover:text-gray-300"><%=signUp %></a></li>
-      </ul>
-    </div>
-  </nav>
+
+    <nav class="bg-blue-600 text-white p-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="text-xl"><%= siteName || 'placeholder' %></div>
+        <ul class="flex space-x-6">
+          <li><a href="/" class="hover:text-gray-300"><%= home %></a></li>
+          <li><a href="/help" class="hover:text-gray-300"><%= help %></a></li>
+  
+          <% if (!isLoggedIn) { %>
+            <li><a href="/login" class="hover:text-gray-300 font-bold underline"><%= login %></a></li>
+            <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
+          <% } else { %>
+            <li>
+              <a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
+              <% } %>
+        </ul>
+      </div>
+    </nav>
+
 
   <!-- SignUp Form Section -->
   <section class="py-16 bg-gray-100 min-h-screen flex items-center justify-center">

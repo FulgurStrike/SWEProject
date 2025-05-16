@@ -30,20 +30,27 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
      if (!email || !password) {
-        return res.send('Username and password required');
-     }
+        return res.render('login', {
+            ...loginContent,
+            invalidCredentials: "Username and password required"
+          });
+        }
 
     try {
         const user = await User.findOne({ email });
         console.log(user);
         if (user === null) {
-            loginContent.invalidCredentials = "Wrong username or Password";
-            res.render("login", loginContent);
+            return res.render('login', {
+                ...loginContent,
+                invalidCredentials: "Wrong username or password"
+              });
         }else{
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            loginContent.invalidCredentials = "Wrong Username or Password";
-            res.render("login", loginContent);
+            return res.render('login', {
+                ...loginContent,
+                invalidCredentials: "Wrong username or password"
+              });
         }
         // Create JWT token with user info
         const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_TOKEN, { expiresIn: '5h' });       
@@ -52,6 +59,7 @@ exports.login = async (req, res) => {
         const userID = user._id.toString();
         console.log(userID);
         res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        path: '/'
         res.cookie('user_id', userID);
 
         return res.redirect('/');
@@ -64,7 +72,7 @@ exports.login = async (req, res) => {
 
 // Logout user
 exports.logout = (req, res) => {
-    res.clearCookie('auth_token');
+    res.clearCookie('auth_token', {path: '/'});
     res.redirect('/login');
 };
 
@@ -83,6 +91,9 @@ exports.authenticateToken = (req, res, next) => {
 exports.showLoginPage = (req, res) => {
     
 
-    res.render('login', loginContent)
+    return res.render('login', {
+        ...loginContent,
+        invalidCredentials: ""
+    })
 };
 
