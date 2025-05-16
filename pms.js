@@ -10,6 +10,7 @@ const signupRoutes = require('./routes/signupRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const helpRoutes = require('./routes/helpRoutes');
+const userRoutes = require('./routes/userRoutes');
 const session = require('express-session')
 const flash = require('connect-flash')
 
@@ -82,6 +83,7 @@ class PMS {
     this.pms.use(paymentRoutes);
     this.pms.use(adminRoutes);
     this.pms.use(helpRoutes);
+    this.pms.use(userRoutes);
 
     this.pms.listen(this.PORT, () => {
       console.log(`Now listening on port ${this.PORT}`);
