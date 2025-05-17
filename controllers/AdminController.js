@@ -1,6 +1,7 @@
 const ParkingRequest = require('../models/parkingrequest');
 const User = require('../models/user');
 const ParkingLot = require('../models/parkinglot');
+const AdminMessage = require('../models/adminMessages')
 const DriverUser = require("../models/driveruser");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -57,8 +58,8 @@ exports.rejectParkingRequest = async (req, res) => {
 const Message = require('../models/messages');
 
 const loginContent = {
-      title: "ParkName",
-      siteName: "ParkName",
+      title: "UEA Park - Admin Login",
+      siteName: "UEA Park - Admin Login",
       home: "Home",
       help: "Help",
       logout: "logout",
@@ -140,6 +141,26 @@ exports.banUser = async (req, res) => {
   res.redirect("/adminDashboard");
 }
 
+exports.sendMessage = async (req, res) => {
+  const { recipientEmail, subject, message, messageId } = req.body;
+  const admin = await User.findById(req.cookies.user_id);
+  const adminEmail = admin.email;
+
+  const adminMessage = new AdminMessage ({
+    senderEmail: adminEmail,
+    recipientEmail: recipientEmail,
+    senderSubject: subject,
+    senderMessage: message
+  });
+  await adminMessage.save();
+
+  await Message.findByIdAndDelete(messageId);
+  
+
+  res.redirect("/adminDashboard");
+
+}
+
 
 exports.renderAdminPage = async (req, res) => {
 
@@ -150,8 +171,8 @@ exports.renderAdminPage = async (req, res) => {
       res.redirect("/adminDashboard/login");
     } else {
       const adminContent = {
-        title: "ParkName",
-        siteName: "ParkName",
+        title: "UEA Park - Admin",
+        siteName: "UEA Park - Admin",
         home: "Home",
         about: "About",
         services: "Services",
@@ -159,6 +180,8 @@ exports.renderAdminPage = async (req, res) => {
         login: "Login",
         logout:"logout",
         signUp: "Sign Up",
+        subject: "Subject",
+        message: "Message",
         footerText: "2025 UEA Software Engineering Group 111",
       };
       try {

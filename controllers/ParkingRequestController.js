@@ -3,8 +3,8 @@ const ParkingRequest = require("../models/parkingrequest");
 const ParkingLot = require("../models/parkinglot");
 
 const indexContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     help: "Help",
     login: "Login",

@@ -36,8 +36,8 @@ exports.makePayment = async (req, res) => {
 
         return res.render('paymentConfirmation', {
             
-          title: "ParkName",
-          siteName: "ParkName",
+          title: "UEA Park",
+          siteName: "UEA Park",
           home: "Home",
           help: "Help",
           login: "Login",
@@ -75,8 +75,8 @@ exports.renderPaymentPage = async (req, res) => {
    const { duration, amount } = calculatePayment(arrival, departure);
 
     const paymentContent = {
-        title: "ParkName",
-        siteName: "ParkName",
+        title: "UEA Park",
+        siteName: "UEA Park",
         home: "Home",
         help: "Help",
         login: "Login",

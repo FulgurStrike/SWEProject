@@ -3,10 +3,11 @@ const DriverUser = require('../models/driveruser');
 const Message = require('../models/messages');
 const ParkingRequest = require('../models/parkingrequest');
 const ParkingLot = require('../models/parkinglot');
+const user = require('../models/user');
 
 const signupContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     help: "Help",
     login: "Login",
@@ -73,8 +74,8 @@ exports.registerUser = async (req, res) => {
         console.log("Form data:", req.body);
 
         return res.render('signup', {
-            title: "ParkName",
-            siteName: "ParkName",
+            title: "UEA Park",
+            siteName: "UEA Park",
             home: "Home",
             about: "About",
             services: "Services",
@@ -123,8 +124,8 @@ exports.showSignupPage = (req, res) => {
 };
 
 const userDashboardContent = {
-    title: "ParkName",
-    siteName: "ParkName",
+    title: "UEA Park",
+    siteName: "UEA Park",
     home: "Home",
     about: "About",
     services: "Services",
@@ -139,18 +140,19 @@ const userDashboardContent = {
 
 exports.renderUserDashboard = async (req,res) => {
     try {
-        const user = await DriverUser.findById(req.cookies.user_id);
+        const driver = await DriverUser.findById(req.cookies.user_id);
         const messages = await Message.find({});
         const requests = await ParkingRequest.find({})
             .populate('driver')
             .populate('parkingLot');
+          
         const parkingLots = await ParkingLot.find({});
         const drivers = await DriverUser.find({}); 
         console.log("user:",user);
 
-        res.render('userDashboard', { ...userDashboardContent, messages, requests, parkingLots, drivers, user });
+        res.render('userDashboard', { ...userDashboardContent, messages, requests, parkingLots, drivers, driver });
     } catch (err) {
         console.error('Failed to fetch messages:', err);
-        res.render('userDashboard', { ...userDashboardContent, messages: [], requests: [], parkingLots: [], drivers: [], user });      
+        res.render('userDashboard', { ...userDashboardContent, messages: [], requests: [], parkingLots: [], drivers: [], driver: [] });      
     }
 }
