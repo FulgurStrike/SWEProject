@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const driveruser = require('../models/driveruser');
 require('dotenv').config()
 
 if (!process.env.JWT_TOKEN /* or .JWT_SECRET */) {
@@ -58,9 +59,9 @@ exports.login = async (req, res) => {
         // Set JWT token into cookie
         const userID = user._id.toString();
         console.log(userID);
-        res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        res.cookie('driver_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
         path: '/'
-        res.cookie('user_id', userID);
+        res.cookie('driver_id', userID);
 
         return res.redirect('/');
     }
@@ -72,21 +73,51 @@ exports.login = async (req, res) => {
 
 // Logout user
 exports.logout = (req, res) => {
-    res.clearCookie('auth_token', {path: '/'});
+    res.clearCookie('driver_token', {path: '/'});
+    res.clearCookie('admin_token', {path: '/'});
+    res.clearCookie('driver_id', { path: '/' });
+    res.clearCookie('admin_id', { path: '/' });
     res.redirect('/login');
 };
 
 // Middleware to authenticate JWT token
-exports.authenticateToken = (req, res, next) => {
-    const token = req.cookies.auth_token;
-    if (!token) return res.redirect('/login');
+exports.authenticateDriver = (req, res, next) => {
+    const token = req.cookies.driver_token;
+    if (!token) {
+        res.clearCookie('driver_token');
+        res.clearCookie('driver_id');
+        return res.redirect('/login');
+    } 
 
     jwt.verify(token, process.env.JWT_TOKEN, (err, user) => {
-        if (err) return res.sendStatus(403);
+        if (err) {
+            res.clearCookie('driver_token');
+            res.clearCookie('driver_id');
+            return res.redirect('/login');
+        }
         req.user = user;
         next();
     });
 };
+
+exports.authenticateAdmin = (req, res, next) => {
+    const token = req.cookies.admin_token;
+    if (!token) {
+        res.clearCookie('admin_token');
+        res.clearCookie('admin_id');
+        return res.redirect('/adminDashboard/login');
+    } 
+
+    jwt.verify(token, process.env.JWT_TOKEN, (err, user) => {
+        if (err) {
+            res.clearCookie('admin_token');
+            res.clearCookie('admin_id');
+            return res.redirect('/adminDashboard/login');
+        }
+        req.user = user;
+        next();
+    })
+}
 
 exports.showLoginPage = (req, res) => {
     

@@ -38,11 +38,13 @@ exports.makeReservation = async (req, res) => {
       console.log(parkingLotName, arrivalTime, departureTime, registration);
 
 
-      driverID = req.cookies.user_id;
+      const driverID = req.cookies.driver_id;
+      console.log("driver ID from cookies:", driverID)
 
       const parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
 
-      driver = await DriverUser.findById(driverID).exec();
+      const driver = await DriverUser.findById(driverID).exec();
+      console.log("driver found:", driver)
 
       try {
         const parkingRequest = new ParkingRequest({
@@ -120,7 +122,7 @@ exports.checkRequestStatus = async (req, res) => {
     }
 
     if (request.requestStatus === 'approved') {
-      return res.redirect(`/payment/${requestID}`);
+      return res.redirect('/payment');
     } else if (request.requestStatus === 'rejected') {
       res.clearCookie("requestID");
       req.flash('error', 'Your parking request was rejected.');

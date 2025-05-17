@@ -83,6 +83,9 @@ exports.renderAdminLogin = (req, res) => {
 exports.adminLogin = async (req, res) => {
     const { email, password } = req.body;
 
+    res.clearCookie('admin_id');
+    res.clearCookie('admin_token');
+
      if (!email || !password) {
         return res.send('Username and password required');
      }
@@ -91,13 +94,13 @@ exports.adminLogin = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             loginContent.invalidCredentials = "Wrong username or Password";
-            res.render("adminlogin", loginContent);
+            return res.render("adminlogin", loginContent);
         }
         else{
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             loginContent.invalidCredentials = "Wrong Username or Password";
-            res.render("adminLogin", loginContent);
+            return res.render("adminlogin", loginContent);
         }
       
         // Create JWT token with user info
@@ -106,8 +109,8 @@ exports.adminLogin = async (req, res) => {
         // Set JWT token into cookie
         const userID = user._id.toString();
         console.log(userID);
-        res.cookie('auth_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
-        res.cookie('user_id', userID);
+        res.cookie('admin_token', token, {httpOnly: true, maxAge: 5 * 60 * 60 * 1000});
+        res.cookie('admin_id', userID);
 
         return res.redirect('/adminDashboard');
       }
@@ -143,7 +146,7 @@ exports.banUser = async (req, res) => {
 
 exports.sendMessage = async (req, res) => {
   const { recipientEmail, subject, message, messageId } = req.body;
-  const admin = await User.findById(req.cookies.user_id);
+  const admin = await User.findById(req.cookies.admin_id);
   const adminEmail = admin.email;
 
   const adminMessage = new AdminMessage ({
@@ -164,11 +167,13 @@ exports.sendMessage = async (req, res) => {
 
 exports.renderAdminPage = async (req, res) => {
 
-    const userID = req.cookies.user_id;
+    const userID = req.cookies.admin_id;
     const user = await User.findById(userID).exec();
 
     if (user === null || user.__t != "AdminUser") {
-      res.redirect("/adminDashboard/login");
+      res.clearCookie("admin_id");
+      res.clearCookie("admin_token");
+      return res.redirect("/adminDashboard/login");
     } else {
       const adminContent = {
         title: "UEA Park - Admin",
