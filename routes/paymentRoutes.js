@@ -3,6 +3,7 @@ const router = express.Router();
 const PaymentController = require('../controllers/PaymentController');
 
 router.get('/payment', PaymentController.renderPaymentPage);
+//router.get('/', PaymentController.renderPaymentPage);
 router.post('/confirm-payment', PaymentController.makePayment);
 
 module.exports = router;

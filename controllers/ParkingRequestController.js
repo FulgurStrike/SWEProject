@@ -38,25 +38,28 @@ exports.makeReservation = async (req, res) => {
       console.log(parkingLotName, arrivalTime, departureTime, registration);
 
 
-      driverID = req.cookies.user_id;
+      const driverID = req.cookies.driver_id;
+      console.log("driver ID from cookies:", driverID)
 
-      parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
+      const parkingLot = await ParkingLot.findOne({ "lotName": parkingLotName });
 
-      driver = await DriverUser.findById(driverID).exec();
+      const driver = await DriverUser.findById(driverID).exec();
+      console.log("driver found:", driver)
 
       try {
         const parkingRequest = new ParkingRequest({
           driver: driver,
           parkingLot: parkingLot,
           arrivalTime: arrivalTime,
-          departureTime: departureTime
-
+          departureTime: departureTime,
+          requestStatus: 'pending'
         });
         await parkingRequest.save();
 
         res.cookie("requestID", parkingRequest._id.toString(), {httpOnly: true, maxAge: 15 * 60 * 1000}); // 15 minutes
-
-        res.redirect(`/payment`);  
+        
+        //res.redirect(`/payment`);
+        res.render('pending', { ...indexContent, message: 'Your parking request is pending approval.', requestID: parkingRequest._id.toString()});  
 
         //res.render('viewParkingRequests')
       } catch (err) {
@@ -101,6 +104,37 @@ exports.viewParkingRequest = async (req, res) => {
         req.flash('error', err.message);
             return res.redirect('back');
     }
+};
+
+// Poll request status
+exports.checkRequestStatus = async (req, res) => {
+  const requestID = req.cookies.requestID;
+
+  if (!requestID) {
+    return res.redirect('/');
+  }
+
+  try {
+    const request = await ParkingRequest.findById(requestID);
+
+    if (!request) {
+      return res.redirect('/');
+    }
+
+    if (request.requestStatus === 'approved') {
+      return res.redirect('/payment');
+    } else if (request.requestStatus === 'rejected') {
+      res.clearCookie("requestID");
+      req.flash('error', 'Your parking request was rejected.');
+      return res.redirect('/');
+    } else {
+      return res.render('pending', { ...indexContent, message: 'Your parking request is still pending approval.', requestID: request._id.toString()});
+    }
+
+  } catch (err) {
+    console.error(err);
+    return res.redirect('/');
+  }
 };
 
 exports.showReservationPage = (req, res) => {

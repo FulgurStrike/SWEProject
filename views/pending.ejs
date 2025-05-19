@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/output.css">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-xl"><%= siteName %></div>
+            <ul class="flex space-x-6">
+                <li><a href="/" class="hover:text-gray-300"><%= home %></a></li>
+                <li><a href="/help" class="hover:text-gray-300"><%= help %></a></li>
+                <li><a href="/login" class="hover:text-gray-300"><%= login %></a></li>
+                <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
+                <li><a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4">Your Reservation is Pending</h2>
+            <p class="text-lg">Thank you for your reservation request. It is currently pending approval from the admin. We will notify you once a decision is made.</p>
+        </div>
+    </div>
+
+    <footer class="bg-blue-600 text-white py-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; Parking System</p>
+        </div>
+    </footer>
+</body>
+<script>
+  const requestID = "<%= requestID %>"; 
+  setInterval(() => {
+    window.location.href = '/check-status';
+  }, 15000); // Every 15 seconds
+</script>
+</html>
