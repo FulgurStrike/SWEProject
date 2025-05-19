@@ -8,7 +8,8 @@
   <title><%= title %></title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+  <main class="flex-grow">
   <% if (errorMessages.length) { %>
     <% errorMessages.forEach(msg => { %>
       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -89,12 +90,13 @@
   </div>
 
  
-  
+  </main>
   <!-- Footer -->
    <footer class="bg-blue-600 text-white py-6">
     <div class="max-w-7xl mx-auto text-center">
         <p>&copy; <%= footerText %></p>
     </div>
    </footer>
+  
 </body>
 </html>
