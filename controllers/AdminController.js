@@ -197,7 +197,7 @@ exports.renderAdminPage = async (req, res) => {
         const parkingLots = await ParkingLot.find({});
         const drivers = await DriverUser.find({}); 
 
-        res.render('adminDashboard', { ...adminContent, messages, requests, parkingLots, drivers });
+        res.render('adminDashboard', { ...adminContent, messages, requests, parkingLots, drivers,  });
       } catch (err) {
         console.error('Failed to fetch messages:', err);
         res.render('adminDashboard', { ...adminContent, messages: [], requests: [], parkingLots: [], drivers: [] });      

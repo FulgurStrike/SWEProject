@@ -140,7 +140,7 @@ const userDashboardContent = {
 
 exports.renderUserDashboard = async (req,res) => {
     try {
-        const driver = await DriverUser.findById(req.cookies.user_id);
+        const driver = await DriverUser.findById(req.cookies.driver_id);
         const messages = await Message.find({});
         const requests = await ParkingRequest.find({})
             .populate('driver')
