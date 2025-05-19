@@ -52,8 +52,9 @@ class PMS {
 
     // Passes the login status to the views
     this.pms.use((req, res, next) => {
-      const token = req.cookies.auth_token; // Check for JWT Token
-      res.locals.isLoggedIn = token ? true : false;
+      const driverToken = req.cookies.driver_token;
+      const adminToken = req.cookies.adminToken // Check for JWT Token
+      res.locals.isLoggedIn = driverToken || adminToken ? true : false;
       next();
     });
 
