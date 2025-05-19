@@ -7,7 +7,8 @@
     <title>Payment</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <main class="flex-grow">
     <% if (errorMessages.length) { %>
         <% errorMessages.forEach(msg => { %>
           <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -53,7 +54,7 @@
     </div>
 
     <!-- Payment Form Panel -->
-    <main class="flex-grow">
+    
         <div class="max-w-3xl mx-auto bg-white mt-10 p-8 rounded-xl shadow-lg">
             <!-- Title -->
             <h2 class="title text-2xl font-bold mb-10 text-center text-gray-800">Checkout</h2>
