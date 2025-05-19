@@ -7,232 +7,134 @@
   <link rel="stylesheet" href="/output.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-  <% if (errorMessages.length) { %>
-    <% errorMessages.forEach(msg => { %>
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <%= msg %>
-      </div>
-    <% }) %>
-  <% } %>
-  
-  <% if (successMessages.length) { %>
-    <% successMessages.forEach(msg => { %>
-      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-        <%= msg %>
-      </div>
-    <% }) %>
-  <% } %>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+  <main class="flex-grow">
+    <% if (errorMessages.length) { %>
+      <% errorMessages.forEach(msg => { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <%= msg %>
+        </div>
+      <% }) %>
+    <% } %>
 
-  <!-- Navbar -->
-  <nav class="bg-blue-600 text-white p-4">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-xl"><%= siteName || 'placeholder' %></div>
-      <ul class="flex space-x-6">
-        <li><a href="/" class="hover:text-gray-300"><%= home %></a></li>
-        <li><a href="/help" class="hover:text-gray-300"><%= help %></a></li>
+    <% if (successMessages.length) { %>
+      <% successMessages.forEach(msg => { %>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <%= msg %>
+        </div>
+      <% }) %>
+    <% } %>
 
-        <% if (!isLoggedIn) { %>
-          <li><a href="/login" class="hover:text-gray-300"><%= login %></a></li>
-          <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="text-xl"><%= siteName || 'placeholder' %></div>
+        <ul class="flex space-x-6">
+          <li><a href="/" class="hover:text-gray-300"><%= home %></a></li>
+          <li><a href="/help" class="hover:text-gray-300"><%= help %></a></li>
+
+          <% if (!isLoggedIn) { %>
+            <li><a href="/login" class="hover:text-gray-300"><%= login %></a></li>
+            <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
+          <% } else { %>
+            <li><a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Section (User Info + Bookings) -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+      <!-- User Info -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4 text-blue-600">User Information</h2>
+        <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+          <p><strong>First Name:</strong> <%= driver.firstName%></p>
+          <p><strong>Last Name:</strong> <%= driver.lastName %></p>
+          <p><strong>Email:</strong> <%= driver.email %></p>
+        </ul>
+      </div>
+
+      <!-- Current Bookings -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4 text-blue-600">Current Bookings</h2>
+        <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+          <% if (requests.length === 0) { %>
+            <li class="text-gray-500">No lots found.</li>
+          <% } else { %>        
+            <% requests.forEach(function(req, i) { %>
+              <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer">
+                <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
+                <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
+                <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
+                <p><strong>Reg:</strong> <%= req.driver.reg %></p>
+                <p><strong>Status:</strong> <%= req.requestStatus %></p>
+              </li>
+            <% }) %>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Messages Section (same size as above) -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Messages</h2>
+      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
+        <% if (messages.length === 0) { %>
+          <li class="text-gray-500">No messages found.</li>
         <% } else { %>
-          <li>
-            <a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
-            <% } %>
-      </ul>
-    </div>
-  </nav>
-
-     <!-- Main Section -->
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-
-    <!-- Left: Booking Requests List -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">User Information</h2>
-      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
-        <p><strong>First Name:</strong> <%= driver.firstName%></p>
-        <p><strong>Last Name:</strong> <%= driver.lastName %></p>
-        <p><strong>Email:</strong> <%= driver.email %></p>
-      </ul>
-      
-    </div>
-
-    <!-- Right: Selected Booking Details -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Current Bookings</h2>
-      <div id="selectedRequest" class="text-gray-700 space-y-3">
-        <p>These are your current bookings</p>
-      </div>
-      <div class="mt-6 flex space-x-4">
-        <% requests.forEach(function(req, i) { %>
-
-            <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
-            <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
-            <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
-            <p><strong>Reg:</strong> <%= req.driver.reg %></p>
-            <p><strong>Status:</strong> <%= req.requestStatus %></p>
-        <% }) %>
-      </div>
-    </div>
-  </div>
-
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-
-    <!-- Left: Parking Lot List -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Admin Messages</h2>
-      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
-        
+          <% messages.forEach(function(req, i) { %>
+            <% if (req.__t === "AdminMessage" && req.recipientEmail === driver.email) { %>
+            <li
+                class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+                data-id="<%= req._id %>"
+                data-email="<%= req.senderEmail %>"
+                data-subject="<%= req.senderSubject %>"
+                data-message="<%= req.senderMessage %>"
+                onclick="selectMessage(this)"
+                >
+                <p><strong>Email:</strong> <%= req.senderEmail %></p>
+                <p><strong>Subject:</strong> <%= req.senderSubject %></p>
+            </li>
+            <% } %>  
+          <% }); %> 
+          <% } %>
       </ul>
       
     </div>
 
-    <!-- Right: Selected Booking Details -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Open Message</h2>
-      <div id="selectedParkingLot" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
-        <p>Select a message from the left to view details.</p>
-      </div>
-      <div class="mt-6 flex space-x-4">
-      </div>
-    </div>
-  </div>
-
-
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-
-    <!-- Left: Driver List -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Drivers</h2>
-      <ul class="space-y-4 overflow-y-auto max-h-[400px]">
-        
-      </ul>
-      
-    </div>
-
-    <!-- Right: Selected Booking Details -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-600">Driver Details</h2>
-      <div id="selectedUser" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
-        <p>Select a driver from the left to view details.</p>
-      </div>
-      <div class="mt-6 flex space-x-4">
-        <form action="/adminDashboard/banUser" method="POST">
-          <input type="hidden" id="banUser" name="id" />
-          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Ban User</button>
-        </form>
+      <!-- Open Message -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4 text-blue-600">Open Message</h2>
+        <div id="selectedMessage" class="text-gray-700 space-y-3 overflow-y-auto max-h-[400px]">
+          <p>Select a message from the left to view details.</p>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
-    <!-- Contact Messages Section -->
-        <div class="max-w-7xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-blue-600">Contact Messages</h2>
-            <ul class="space-y-4">
-
-              </ul>
-          </div>
-        //   <script>
-        //     function selectRequest(el) {
-        //       const id        = el.dataset.id;
-        //       const arrival   = el.dataset.arrival;
-        //       const departure = el.dataset.departure;
-        //       const first     = el.dataset.first;
-        //       const parkinglot = el.dataset.parkinglot;
-        //       const last      = el.dataset.last;
-        //       const reg       = el.dataset.reg;
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6 mt-auto">
+    <div class="max-w-7xl mx-auto text-center">
+      <p>&copy; <%= footerText %></p>
+    </div>
+  </footer>
+  <script>
+            function selectMessage(el) {
+              const id        = el.dataset.id;
+              const email   = el.dataset.email;
+              const subject = el.dataset.subject;
+              const message     = el.dataset.message;
           
-        //       acceptID = document.getElementById('acceptId')
-        //       acceptID.setAttribute("value", id);
-              
-        //       rejectID = document.getElementById('rejectId');
-        //       rejectID.setAttribute("value", id);
-          
-        //       document.getElementById('selectedRequest').innerHTML = `
-        //         <p><strong>Arrival Time:</strong> ${arrival}</p>
-        //         <p><strong>Departure Time:</strong> ${departure}</p>
-        //         <p><strong>First Name:</strong> ${first}</p>
-        //         <p><strong>Last Name:</strong> ${last}</p>
-        //         <p><strong>Reg:</strong> ${reg}</p>
-        //         <p><strong>Status:</strong> pending</p>`;
-        //     }
+              document.getElementById('selectedMessage').innerHTML = `
+                <p><strong>Sender Email:</strong> ${email}</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Message:</strong> ${message}</p>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"><a href="/help" class="hover:text-gray-300">If you need to send another message, click me!</a></button>`;
+            }
 
-        //   </script>
-        //   <script>
-        //     const requests = JSON.parse('<%- JSON.stringify(requests) %>');
-        //   </script>
-        //   <script>
-        //     function selectParkingLot(el, requests) {
+          </script>
+</body>
 
-              
-        //       const id = el.dataset.id;
-        //       requestsInLot = [];
-
-
-
-        //       requests.forEach(function (req) {
-        //         if (req.parkingLot._id === id) {
-        //           if (req.requestStatus == "approved") {
-        //             requestsInLot.push(req);
-        //           }
-        //         }
-        //       });
-
-        //       selectedLot = document.getElementById('selectedParkingLot')
-
-        //       selectedLot.innerHTML = '';
-
-        //       if (requestsInLot.length === 0) {
-        //         selectedLot.innerHTML = `<p>No approved bookings for this lot.</p>`;
-        //       } else {
-        //         requestsInLot.forEach(req => {
-        //           const item = document.createElement("li");
-        //           item.className = "border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer";
-        //           item.setAttribute("data-id", req._id);
-        //           item.setAttribute("data-arrival", req.arrivalTime);
-        //           item.setAttribute("data-departure", req.departureTime);
-        //           item.setAttribute("data-parkinglot", req.parkingLot.lotName);
-        //           item.setAttribute("data-first", req.driver.firstName);
-        //           item.setAttribute("data-last", req.driver.lastName);
-        //           item.setAttribute("data-reg", req.driver.reg);
-        //           item.onclick = function () {
-        //             selectApprovedRequest(this);  
-        //           };
-
-        //           item.innerHTML = 
-        //           `<p><strong>Driver Name:</strong> ${req.driver.firstName} ${req.driver.lastName}</p>
-        //           <p><strong>Arrival Time:</strong> ${req.arrivalTime}</p>
-        //           <p><strong>Departure Time:</strong> ${req.departureTime}</p>`;
-        //           selectedLot.appendChild(item);
-        //         });
-        //       }
-
-        //     }
-        //   </script>
-        //   <script>
-        //     function selectApprovedRequest(el) {
-        //       const id = el.dataset.id;
-
-        //       rejectID = document.getElementById('approvedRequestId');
-        //       rejectID.setAttribute("value", id);
-        //     }
-        //   </script>
-        //   <script>
-        //     function selectUser(el) {
-        //       const id = el.dataset.id;
-        //       const firstName = el.dataset.firstname;
-        //       const lastName = el.dataset.lastname;
-        //       const email = el.dataset.email;
-
-        //       acceptID = document.getElementById('banUser')
-        //       acceptID.setAttribute("value", id);
-
-        //       document.getElementById('selectedUser').innerHTML = `
-        //         <p><strong>First Name:</strong> ${firstName}</p>
-        //         <p><strong>Last Name:</strong> ${lastName}</p>
-        //         <p><strong>Email Address:</strong> ${email}</p>`;
-        //     }
-
-        //   </script>
-    </body>
 </html> 
