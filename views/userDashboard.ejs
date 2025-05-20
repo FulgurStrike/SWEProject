@@ -38,6 +38,7 @@
             <li><a href="/signup" class="hover:text-gray-300"><%= signUp %></a></li>
           <% } else { %>
             <li><a href="/logout" class="hover:text-gray-300"><%= logout %></a></li>
+            <li<a href="/account" class="hover:text-grey-300 font-bold underline"> <%= account %></a></li>
           <% } %>
         </ul>
       </div>
@@ -63,13 +64,15 @@
             <li class="text-gray-500">No lots found.</li>
           <% } else { %>        
             <% requests.forEach(function(req, i) { %>
-              <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer">
-                <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
-                <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
-                <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
-                <p><strong>Reg:</strong> <%= req.driver.reg %></p>
-                <p><strong>Status:</strong> <%= req.requestStatus %></p>
-              </li>
+              <% if (req.driver._id.toString() === driver._id.toString()) { %>
+                <li class="border border-gray-300 p-4 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <p><strong>Arrival Time:</strong> <%= req.arrivalTime %></p>
+                  <p><strong>Departure Time:</strong> <%= req.departureTime %></p>
+                  <p><strong>Location:</strong> <%= req.parkingLot.lotName %></p>
+                  <p><strong>Reg:</strong> <%= req.driver.reg %></p>
+                  <p><strong>Status:</strong> <%= req.requestStatus %></p>
+                </li>
+              <% } %>
             <% }) %>
           <% } %>
         </ul>

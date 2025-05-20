@@ -8,6 +8,7 @@ const helpContent = (submitMessage ='') => ({
     login: "Login",
     signUp: "Sign Up",
     logout: "Logout",
+    account: "Account",
     footerText: "2025 UEA Software Engineering Group 111",
     instructionTitle: "How To Use This Website",
     howOne: "Register an account",

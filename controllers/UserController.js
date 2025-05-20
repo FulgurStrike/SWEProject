@@ -129,9 +129,10 @@ const userDashboardContent = {
     home: "Home",
     about: "About",
     services: "Services",
+    account: "Account",
     help: "Help",
     login: "Login",
-    logout:"logout",
+    logout:"Logout",
     signUp: "Sign Up",
     footerText: "2025 UEA Software Engineering Group 111",
   };
